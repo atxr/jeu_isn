@@ -19,7 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Balles.cpp" />
+    <ClCompile Include="Decor.cpp" />
+    <ClCompile Include="Ennemi.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Perso.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Balles.h" />
+    <ClInclude Include="Decor.h" />
+    <ClInclude Include="Ennemi.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="Perso.h" />
+    <ClInclude Include="typedef.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
