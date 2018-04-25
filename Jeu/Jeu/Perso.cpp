@@ -89,6 +89,10 @@ void Perso::update(Input *input, Decor *decor)
 	{
 		setPosition(getPosition() + Vector2f(0, 2));
 	}
+	else
+	{
+		setPosition(Vector2f(getPosition().x, mouvement->maxBas));
+	}
 
 	if (bouton.bas) //SE BAISSER
 	{

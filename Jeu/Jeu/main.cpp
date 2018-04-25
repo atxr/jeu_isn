@@ -28,6 +28,8 @@ BREF TA COMPRIS
 VOILAAAA DIS MOI SI TA LE MOINDRE PB
 
 ET POUR FINIR JE SUIS EN TRAIN DE NETOYER LE CODE DONC YA PAS MAL DE TRUC BIZZARD HEIN MAIS JE TE DIRAIS QD JAURAIS TOUT BIEN NETOOYER
+
+IL NOUS FAUDRAIT UN NOM AUSSI 
 */
 
 
@@ -68,7 +70,7 @@ int main()
 	Perso rect;
 	bool position(true); //Vers la droite par défaut si "true"
 
-						 //Saut
+	//Saut
 	bool sauter(false);
 	float tempsDebutSaut;
 	bool tomberDebut(false);
@@ -111,21 +113,10 @@ int main()
 
 		//Evenements
 
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) //Droite
-		{
-			position = true; //(bool)position = true si le perso est tourné vers la droite
-		}
-
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !sauter) //Initialisation du saut
 		{
 			sauter = true;
 			tempsDebutSaut = clock.getElapsedTime().asMilliseconds();
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		{
-			//Se baisser
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //Tir
@@ -171,12 +162,9 @@ int main()
 		//Dessin
 
 
-		window.clear(sf::Color::White);
-
-
+		window.clear();
 
 		decor.loadMap(1, window);
-
 
 		rect.update(&input, &decor);
 

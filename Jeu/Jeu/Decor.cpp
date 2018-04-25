@@ -139,6 +139,9 @@ void Decor::testCollision(Mouvement * mouvement)
 
 	int numTileXSuivant = numTileXDroite + 1;
 	int numTileXPrecedant = numTileXGauche - 1;
+	int numTileYSuivant = numTileYBas + 1;
+	int numTileYPrecedant = numTileYHaut - 1;
+
 
 	//Droite
 
@@ -177,7 +180,7 @@ void Decor::testCollision(Mouvement * mouvement)
 		}
 	}
 
-	else if (map[numTileYBas][floor((xPerso - 2) / 32)] == 0)
+	else if (map[numTileYBas][floor((xPerso - 2) / 32)] == TRANSPARANT)
 	{
 		mouvement->gauche = true;
 	}
@@ -187,14 +190,21 @@ void Decor::testCollision(Mouvement * mouvement)
 
 	//Tomber
 
-	if (yPerso + 40 + 2 > 480)
+	if (yPerso + 40 + 2 >= 480)
 	{
-		yPerso = 480 - 40;
+		mouvement->maxBas = 480 - 40.1;
 	}
 
-	else if (map[floor((yPerso + 2) / 32)][numTileXGauche] == TRANSPARANT && map[floor((yPerso + 2) / 32)][numTileXDroite] == TRANSPARANT)
+	else if (yPerso + 40 + 2 >=  numTileYSuivant * TILE_SIZE && (map[numTileYSuivant][numTileXGauche] != TRANSPARANT || map[numTileYSuivant][numTileXDroite] != TRANSPARANT))
+	{
+			mouvement->maxBas = numTileYSuivant * TILE_SIZE - 40.1;
+	}
+
+	else
 	{
 		mouvement->bas = true;
 	}
+
+	
 }
 
