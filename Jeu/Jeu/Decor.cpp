@@ -190,12 +190,12 @@ void Decor::testCollision(Mouvement * mouvement)
 
 	//Tomber
 
-	if (yPerso + 40 + 2 >= 480)
+	if (yPerso + 40 + 4 >= 480)
 	{
 		mouvement->maxBas = 480 - 40.1;
 	}
 
-	else if (yPerso + 40 + 2 >=  numTileYSuivant * TILE_SIZE && (map[numTileYSuivant][numTileXGauche] != TRANSPARANT || map[numTileYSuivant][numTileXDroite] != TRANSPARANT))
+	else if (yPerso + 40 + 4 >=  numTileYSuivant * TILE_SIZE && (map[numTileYSuivant][numTileXGauche] != TRANSPARANT || map[numTileYSuivant][numTileXDroite] != TRANSPARANT))
 	{
 			mouvement->maxBas = numTileYSuivant * TILE_SIZE - 40.1;
 	}

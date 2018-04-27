@@ -6,6 +6,8 @@ Perso::Perso() : RectangleShape::RectangleShape(Vector2f(25, 40)) //Attention la
 {
 	setFillColor(Color::Red);
 	setPosition(120, 400);
+
+	sol = false;
 }
 
 
@@ -40,7 +42,7 @@ bool Perso::tomber(vector<int> map, vector<Vector2f*> vecPositionDecor)
 	return false;
 }
 
-void Perso::update(Input *input, Decor *decor)
+void Perso::update(Input *input, Decor *decor, Time time)
 {
 	mouvement = new Mouvement;
 	mouvement->bas = mouvement->droite = mouvement->gauche = mouvement->haut = false;
@@ -53,8 +55,6 @@ void Perso::update(Input *input, Decor *decor)
 	bouton.bas = input->getStatut(BAS);
 	bouton.attaque = input->getStatut(ATTAQUE);
 	bouton.pause = input->getStatut(PAUSE);
-
-	cout << mouvement->droite << " " << mouvement->gauche << " ";
 
 	if (bouton.droite) //DROITE
 	{
@@ -80,18 +80,36 @@ void Perso::update(Input *input, Decor *decor)
 		}
 	}
 
-	if (bouton.haut) //SAUTER
-	{
-
-	}
-
 	if (mouvement->bas) //TOMBER
 	{
-		setPosition(getPosition() + Vector2f(0, 2));
+		setPosition(getPosition() + Vector2f(0, 4));
+		sol = false;
 	}
 	else
 	{
 		setPosition(Vector2f(getPosition().x, mouvement->maxBas));
+		sol = true;
+	}
+
+	if (bouton.haut && sol) //SAUTER
+	{
+		saut = true;
+		debutSaut = time;
+	}
+
+	if (saut)
+	{
+		if (time.asSeconds()- debutSaut.asSeconds() < 0.5)
+		{
+			float f = 11 - 22 *(time.asSeconds() - debutSaut.asSeconds());
+			setPosition(getPosition() - Vector2f(0, f));
+		}
+
+		else
+		{
+			saut = false;
+		}
+
 	}
 
 	if (bouton.bas) //SE BAISSER

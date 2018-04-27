@@ -55,7 +55,7 @@ int main()
 {
 	//////////////////////////////////////////////////////////////////////
 
-	//Initialisation des parametres de base
+	//Initialisation
 
 	//Parametres de la fenetre
 	sf::RenderWindow window({ 800,480 }, "Hello World!"); //GRAVITE ATTENTION DECOR.CPP
@@ -64,7 +64,7 @@ int main()
 
 	//Horloge
 	sf::Clock clock;
-	float time;
+	Time time;
 
 	//Perso
 	Perso rect;
@@ -95,29 +95,14 @@ int main()
 
 	while (window.isOpen())
 	{
-		time = clock.getElapsedTime().asMilliseconds(); //time prend la valeur du temps au moment du début de la boucle
+		//Temps
 
-
-		/////////////////////////////////////////////////////////////////////////////////
-
-		//Evenements
-
-		input.update();
-
-		/////////////////////////////////////////////////////////////////////////////////
-
-		//Map
-
-
-		/////////////////////////////////////////////////////////////////////////////////
+		time = clock.getElapsedTime(); //time prend la valeur du temps au moment du début de la boucle
 
 		//Evenements
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !sauter) //Initialisation du saut
-		{
-			sauter = true;
-			tempsDebutSaut = clock.getElapsedTime().asMilliseconds();
-		}
+		input.update(); //On met à jour les évenements
+
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //Tir
 		{
@@ -126,36 +111,12 @@ int main()
 			if (!tir)
 			{
 				tir = true;
-				vecBalles.push_back(new Balles(rect.getPosition(), time, position));
+				vecBalles.push_back(new Balles(rect.getPosition(), time.asMicroseconds(), position));
 			}
 
-			else if (time - vecBalles[a]->getTempsDebut() > 200)
+			else if (time.asMicroseconds() - vecBalles[a]->getTempsDebut() > 200)
 				tir = false;
-		}
-
-		/////////////////////////////////////////////////////////////////////////////////
-
-		//Mouvements
-
-		if (sauter) //Saut
-		{
-			sauter = rect.sauter(time - tempsDebutSaut);
-
-			if (!sauter)
-				tomberDebut = true;
-		}
-
-		else if (tomberDebut) //Chute
-		{
-			tempsDebutTomber = time;
-			tomberDebut = false;
-			tomber = true;
-		}
-
-		if (tomber)
-		{
-			//rect.tomber(vecPositionDecor,vecDecorSolide);
-		}
+		} 
 
 		/////////////////////////////////////////////////////////////////////////////////
 
@@ -164,15 +125,14 @@ int main()
 
 		window.clear();
 
-		decor.loadMap(1, window);
+		decor.loadMap(1, window); //On dessine la map
 
-		rect.update(&input, &decor);
-
+		rect.update(&input, &decor, time); //On met a jour le perso
 		window.draw(rect); //Dessin du perso
 
 		for (int i = 0; i < vecBalles.size(); i++)
 		{
-			update = vecBalles[i]->update(time);
+			update = vecBalles[i]->update(time.asMicroseconds());
 
 			if (update)
 				window.draw(*vecBalles[i]);

@@ -20,10 +20,13 @@ public:
 	void reculer(); //Ca aussi
 	bool sauter(float x); //Ca de meme
 	bool tomber(vector<int> map, vector<Vector2f*> vecPositionDecor); // ca egallement
-	void update(Input *input, Decor *decor); // CA NAAAN on garde mdrr cest ce qui permet de faire avancer reculer bouger tester les collision etc..
+	void update(Input *input, Decor *decor, Time time); // CA NAAAN on garde mdrr cest ce qui permet de faire avancer reculer bouger tester les collision etc..
 private:
 	int m_vie; //La vie du perso pour linstant comme ya pas dennemi elle sert a rien un peu
 	Mouvement *mouvement; //Ca c'est une structure (regroupement de variables dans un type qui sappelle mouvement) qui teste les collisions (voir typedef.h)
 	Bouton bouton; //Et ca une autre structure qui permet de savoir quelle entrée du clavier est appuyé etc (voir typedef.h et aussi la classe Input)
+	bool sol; //Test si le perso est sur le sol
+	bool saut; //Est ce qu'on doit sauter
+	Time debutSaut;
 };
 
