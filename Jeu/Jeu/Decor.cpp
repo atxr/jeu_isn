@@ -180,13 +180,27 @@ void Decor::testCollision(Mouvement * mouvement)
 		}
 	}
 
-	else if (map[numTileYBas][floor((xPerso - 2) / 32)] == TRANSPARANT)
+	else if (map[numTileYBas][floor((xPerso - 2) / 32)] == TRANSPARANT && map[numTileYHaut][floor((xPerso - 2) / 32)] == TRANSPARANT)
 	{
 		mouvement->gauche = true;
 	}
 
 	//Haut
 
+	if (yPerso - 11 <= 0)
+	{
+		mouvement->maxHaut = 0;
+	}
+
+	else if (yPerso - 11 < numTileYHaut * TILE_SIZE && (map[numTileYPrecedant][numTileXGauche] != TRANSPARANT || map[numTileYPrecedant][numTileXDroite] != TRANSPARANT))
+	{
+		mouvement->maxHaut = numTileYHaut * TILE_SIZE;
+	}
+
+	else
+	{
+		mouvement->haut = true;
+	}
 
 	//Tomber
 
@@ -197,14 +211,12 @@ void Decor::testCollision(Mouvement * mouvement)
 
 	else if (yPerso + 40 + 4 >=  numTileYSuivant * TILE_SIZE && (map[numTileYSuivant][numTileXGauche] != TRANSPARANT || map[numTileYSuivant][numTileXDroite] != TRANSPARANT))
 	{
-			mouvement->maxBas = numTileYSuivant * TILE_SIZE - 40.1;
+		mouvement->maxBas = numTileYSuivant * TILE_SIZE - 40.1;
 	}
 
 	else
 	{
 		mouvement->bas = true;
 	}
-
-	
 }
 

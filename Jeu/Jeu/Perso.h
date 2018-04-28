@@ -10,6 +10,7 @@ c'est la classe du personnage comme son nom l'indique
 #include "typedef.h"
 #include "Decor.h"
 #include "Input.h"
+#include "Balles.h"
 
 class Perso : public sf::RectangleShape
 {
@@ -21,12 +22,16 @@ public:
 	bool sauter(float x); //Ca de meme
 	bool tomber(vector<int> map, vector<Vector2f*> vecPositionDecor); // ca egallement
 	void update(Input *input, Decor *decor, Time time); // CA NAAAN on garde mdrr cest ce qui permet de faire avancer reculer bouger tester les collision etc..
+	void dessinerPerso(RenderWindow * window); //Dessine le perso ET les balles qui sont tirées par ce perso
 private:
 	int m_vie; //La vie du perso pour linstant comme ya pas dennemi elle sert a rien un peu
 	Mouvement *mouvement; //Ca c'est une structure (regroupement de variables dans un type qui sappelle mouvement) qui teste les collisions (voir typedef.h)
 	Bouton bouton; //Et ca une autre structure qui permet de savoir quelle entrée du clavier est appuyé etc (voir typedef.h et aussi la classe Input)
 	bool sol; //Test si le perso est sur le sol
 	bool saut; //Est ce qu'on doit sauter
-	Time debutSaut;
+	Time debutSaut; //Debut tu temps auquel on a sauté
+	vector<Balles*> tabBalle; //Balles tirées par le perso
+	bool feu;
+	Time debutFeu;
 };
 

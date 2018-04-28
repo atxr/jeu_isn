@@ -7,7 +7,7 @@ Perso::Perso() : RectangleShape::RectangleShape(Vector2f(25, 40)) //Attention la
 	setFillColor(Color::Red);
 	setPosition(120, 400);
 
-	sol = false;
+	sol = saut = feu = false;
 }
 
 
@@ -97,7 +97,7 @@ void Perso::update(Input *input, Decor *decor, Time time)
 		debutSaut = time;
 	}
 
-	if (saut)
+	if (saut && mouvement->haut)
 	{
 		if (time.asSeconds()- debutSaut.asSeconds() < 0.5)
 		{
@@ -111,14 +111,51 @@ void Perso::update(Input *input, Decor *decor, Time time)
 		}
 
 	}
+	else
+	{
+		saut = false;
+	}
 
 	if (bouton.bas) //SE BAISSER
 	{
 
 	}
 
+	if (bouton.attaque && !feu)
+	{
+		feu = true;
+		debutFeu = time;
+		tabBalle.push_back(new Balles(getPosition(), true));
+	}
+
+	if (time.asMilliseconds() - debutFeu.asMilliseconds() > 100)
+	{
+		feu = false;
+	}
+
+	for (int i = 0; i < tabBalle.size(); i++)
+	{
+		bool testBalle = tabBalle[i]->update();
+
+		if (!testBalle)
+		{
+			tabBalle.erase(tabBalle.begin() + i);
+		}
+	}
+
+
 	//ICI CEST PAS FINI COMME TU PEUX LE VOIR
 
 	delete mouvement;
+}
+
+void Perso::dessinerPerso(RenderWindow * window)
+{
+	window->draw(*this);
+
+	for (int i = 0; i < tabBalle.size(); i++)
+	{
+		window->draw(*tabBalle[i]);
+	}
 }
 

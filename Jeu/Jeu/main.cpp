@@ -104,19 +104,7 @@ int main()
 		input.update(); //On met à jour les évenements
 
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //Tir
-		{
-			int a = vecBalles.size() - 1;
-
-			if (!tir)
-			{
-				tir = true;
-				vecBalles.push_back(new Balles(rect.getPosition(), time.asMicroseconds(), position));
-			}
-
-			else if (time.asMicroseconds() - vecBalles[a]->getTempsDebut() > 200)
-				tir = false;
-		} 
+		
 
 		/////////////////////////////////////////////////////////////////////////////////
 
@@ -128,18 +116,7 @@ int main()
 		decor.loadMap(1, window); //On dessine la map
 
 		rect.update(&input, &decor, time); //On met a jour le perso
-		window.draw(rect); //Dessin du perso
-
-		for (int i = 0; i < vecBalles.size(); i++)
-		{
-			update = vecBalles[i]->update(time.asMicroseconds());
-
-			if (update)
-				window.draw(*vecBalles[i]);
-
-			else
-				vecBalles.erase(vecBalles.begin() + i);
-		}
+		rect.dessinerPerso(&window); //Dessin du perso et des balles
 
 		window.display();
 	}

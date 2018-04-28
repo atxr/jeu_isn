@@ -6,12 +6,14 @@ Balles::Balles()
 {
 }
 
-Balles::Balles(sf::Vector2f const a, float const temps, bool const dir) : sf::RectangleShape::RectangleShape(sf::Vector2f(15, 5)), m_tempsDebut(temps), m_direction(dir)
+Balles::Balles(sf::Vector2f const a, bool dir) : sf::RectangleShape::RectangleShape(sf::Vector2f(15, 5)), direction(dir)
 {
 	++compteur;
 
 	setFillColor(sf::Color::Yellow);
 	setPosition(a + sf::Vector2f(0, 20));
+
+	std::cout << 1;
 }
 
 
@@ -26,12 +28,14 @@ int Balles::getCompteur()
 	return compteur;
 }
 
-bool Balles::update(float const temps)
+bool Balles::update()
 {
-	if (temps - m_tempsDebut > 500)
+	if (dureeVie.getElapsedTime().asSeconds() > 0.5)
+	{
 		return false;
+	}
 
-	if (m_direction)
+	else if (direction)
 	{
 		setPosition(getPosition() + sf::Vector2f(15, 0));
 		return true;

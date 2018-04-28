@@ -5,20 +5,22 @@ Euu ba celle la ca sert a rien de regarder je vais la refaire toute facon
 
 #pragma once
 #include <SFML\Graphics.hpp>
+#include <iostream>
 
 class Balles : public sf::RectangleShape
 {
 public:
 	Balles();
-	Balles(sf::Vector2f const position, float const temps, bool const dir);
+	Balles(sf::Vector2f const position, bool const dir);
 	~Balles();
 	static int getCompteur();
-	bool update(float const temps);
+	bool update();
 	float getTempsDebut();
 private:
 	static int compteur;
-	bool m_direction;
+	bool direction;
 	float m_tempsDebut;
 	float m_alea;
+	sf::Clock dureeVie;
 };
 

@@ -23,7 +23,7 @@ typedef struct
 } Mouvement;
 
 
-//Bouton (pour les boutons qui sont enfoncés
+//Bouton (pour les boutons qui sont enfoncés)
 typedef struct
 {
 	bool droite, gauche, haut, bas, attaque, pause;
