@@ -33,11 +33,8 @@ private:
 	bool feu;
 	Time debutFeu;
 
-	//Test de collisiton
+	//Constante
 
-	bool droite; float maxDroite;
-	bool gauche; float maxGauche;
-	bool haut; float maxHaut;
-	bool bas; float maxBas;
+	int const GRAVITE = 4;
 };
 

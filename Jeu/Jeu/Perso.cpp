@@ -83,13 +83,13 @@ void Perso::update(Input *input, Decor *decor, Time time)
 
 	//TOMBER
 
-	test->vitesse = 4;
+	test->vitesse = GRAVITE;
 
 	decor->testCollisionBas(test);
 
 	if (test->statut) 
 	{
-		setPosition(getPosition() + Vector2f(0, 4));
+		setPosition(getPosition() + Vector2f(0, GRAVITE));
 		sol = false;
 	}
 
@@ -127,7 +127,10 @@ void Perso::update(Input *input, Decor *decor, Time time)
 			{
 				saut = false;
 			}
-			
+
+			test->position = getPosition();
+			test->statut = false;
+			test->valeur = 0;
 		}
 
 		else
@@ -148,7 +151,7 @@ void Perso::update(Input *input, Decor *decor, Time time)
 		tabBalle.push_back(new Balle(getPosition(), true));
 	}
 
-	if (time.asMilliseconds() - debutFeu.asMilliseconds() > 500)
+	if (time.asMilliseconds() - debutFeu.asMilliseconds() > 100)
 	{
 		feu = false;
 	}
