@@ -153,7 +153,7 @@ void Perso::update(Input *input, Decor *decor, Time time)
 		tabBalle.push_back(new Balle(getPosition(), direction));
 	}
 
-	if (time.asMilliseconds() - debutFeu.asMilliseconds() > 100)
+	if (time.asMilliseconds() - debutFeu.asMilliseconds() > 500)
 	{
 		feu = false;
 	}
