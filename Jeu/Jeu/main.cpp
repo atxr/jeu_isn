@@ -46,7 +46,7 @@ bref tatarde pas trop ici cest un peu sale :o
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include "Perso.h"
-#include "Balles.h"
+#include "Balle.h"
 #include "Decor.h"
 #include "Ennemi.h"
 #include <math.h>
@@ -69,18 +69,6 @@ int main()
 	//Perso
 	Perso rect;
 	bool position(true); //Vers la droite par défaut si "true"
-
-	//Saut
-	bool sauter(false);
-	float tempsDebutSaut;
-	bool tomberDebut(false);
-	bool tomber(false);
-	float tempsDebutTomber;
-
-	//Balles
-	bool tir(false);
-	bool update;
-	std::vector<Balles*> vecBalles;
 
 	//Decor
 	Decor decor;

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Balles.cpp" />
+    <ClCompile Include="Balle.cpp" />
     <ClCompile Include="Decor.cpp" />
     <ClCompile Include="Ennemi.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -27,7 +27,7 @@
     <ClCompile Include="Perso.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Balles.h" />
+    <ClInclude Include="Balle.h" />
     <ClInclude Include="Decor.h" />
     <ClInclude Include="Ennemi.h" />
     <ClInclude Include="Input.h" />

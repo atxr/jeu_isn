@@ -10,7 +10,8 @@ c'est la classe du personnage comme son nom l'indique
 #include "typedef.h"
 #include "Decor.h"
 #include "Input.h"
-#include "Balles.h"
+#include "Balle.h"
+
 
 class Perso : public sf::RectangleShape
 {
@@ -19,8 +20,6 @@ public:
 	~Perso(); //Destructeur -> ce que l'ont fait quand on detruit un  perso, je men sert pas met il est la par defaut alors pour linstant je le laisse il gene pas
 	void avancer(); //Ca je vais supprimer fait pas attention
 	void reculer(); //Ca aussi
-	bool sauter(float x); //Ca de meme
-	bool tomber(vector<int> map, vector<Vector2f*> vecPositionDecor); // ca egallement
 	void update(Input *input, Decor *decor, Time time); // CA NAAAN on garde mdrr cest ce qui permet de faire avancer reculer bouger tester les collision etc..
 	void dessinerPerso(RenderWindow * window); //Dessine le perso ET les balles qui sont tirées par ce perso
 private:
@@ -30,8 +29,15 @@ private:
 	bool sol; //Test si le perso est sur le sol
 	bool saut; //Est ce qu'on doit sauter
 	Time debutSaut; //Debut tu temps auquel on a sauté
-	vector<Balles*> tabBalle; //Balles tirées par le perso
+	vector<Balle*> tabBalle; //Balles tirées par le perso
 	bool feu;
 	Time debutFeu;
+
+	//Test de collisiton
+
+	bool droite; float maxDroite;
+	bool gauche; float maxGauche;
+	bool haut; float maxHaut;
+	bool bas; float maxBas;
 };
 

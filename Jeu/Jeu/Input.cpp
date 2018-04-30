@@ -92,7 +92,7 @@ void Input::update()
 			window->close();
 			break;
 
-			//Touche enfoncée
+			//Touche pressée
 		case Event::KeyPressed:
 			switch (event.key.code)
 			{
@@ -121,6 +121,7 @@ void Input::update()
 				break;
 
 			default:
+				setBouton(HAUT, false);
 				break;
 			}
 

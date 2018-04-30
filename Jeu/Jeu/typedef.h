@@ -23,6 +23,17 @@ typedef struct
 } Mouvement;
 
 
+typedef struct
+{
+	bool statut = false;
+	float valeur;
+	Vector2f position;
+	float longueur;
+	float hauteur;
+	float vitesse;
+} Collision;
+
+
 //Bouton (pour les boutons qui sont enfoncés)
 typedef struct
 {
@@ -32,3 +43,6 @@ typedef struct
 
 //Et une enmeration de int: DROITE = 0, GAUCHE = 1 .....
 enum : int { DROITE, GAUCHE, HAUT, BAS, ATTAQUE, PAUSE };
+
+//Ca cest une sorte de tableau de int en gros transparent = 0, terre = 1 ...
+enum : int { TRANSPARANT, TERRE, TERRE_GAZON, ROCHE, ROCHE_GAZON, ECHELLE }; 

@@ -28,27 +28,8 @@ void Perso::reculer()
 }
 
 
-bool Perso::sauter(float x)
-{
-	float f = 13 * (0.002*x - 0.5); //-5 * (2x -1)
-	setPosition(Vector2f(getPosition() + Vector2f(0, f)));
-	return f > 0;
-}
-
-bool Perso::tomber(vector<int> map, vector<Vector2f*> vecPositionDecor)
-{
-
-
-	return false;
-}
-
 void Perso::update(Input *input, Decor *decor, Time time)
 {
-	mouvement = new Mouvement;
-	mouvement->bas = mouvement->droite = mouvement->gauche = mouvement->haut = false;
-	mouvement->position = getPosition();
-	decor->testCollision(mouvement);
-
 	bouton.droite = input->getStatut(DROITE);
 	bouton.gauche = input->getStatut(GAUCHE);
 	bouton.haut = input->getStatut(HAUT);
@@ -56,64 +37,103 @@ void Perso::update(Input *input, Decor *decor, Time time)
 	bouton.attaque = input->getStatut(ATTAQUE);
 	bouton.pause = input->getStatut(PAUSE);
 
+	Collision * test = new Collision;
+
+	test->longueur = 25; 
+	test->hauteur = 40;
+	test->position = getPosition();
+	test->vitesse = 2;
+
 	if (bouton.droite) //DROITE
 	{
-		if (mouvement->droite)
+		decor->testCollisionDroite(test);
+
+		if (test->statut)
 		{
 			setPosition(getPosition() + Vector2f(2, 0));
 		}
 		else
 		{
-			setPosition(Vector2f(mouvement->maxDroite, getPosition().y));
+			setPosition(Vector2f(test->valeur, getPosition().y)); //On colle le perso a la paroi
 		}
+
+		test->position = getPosition();
+		test->statut = false;
+		test->valeur = 0;
 	}
 
 	if (bouton.gauche) //GAUCHE
 	{
-		if (mouvement->gauche)
+		decor->testCollisionGauche(test);
+
+		if (test->statut)
 		{
 			setPosition(getPosition() - Vector2f(2, 0));
 		}
-		else if (mouvement->maxGauche == 0)
+
+		else
 		{
-			setPosition(Vector2f(0, getPosition().y));
+			setPosition(Vector2f(test->valeur, getPosition().y));
 		}
+
+		test->position = getPosition();
+		test->statut = false;
+		test->valeur = 0;
 	}
 
-	if (mouvement->bas) //TOMBER
+	//TOMBER
+
+	test->vitesse = 4;
+
+	decor->testCollisionBas(test);
+
+	if (test->statut) 
 	{
 		setPosition(getPosition() + Vector2f(0, 4));
 		sol = false;
 	}
+
 	else
 	{
-		setPosition(Vector2f(getPosition().x, mouvement->maxBas));
+		setPosition(Vector2f(getPosition().x, test->valeur));
 		sol = true;
 	}
 
-	if (bouton.haut && sol) //SAUTER
+	test->position = getPosition();
+	test->statut = false;
+	test->valeur = 0;
+
+	//SAUTER
+
+	if (bouton.haut && sol)
 	{
 		saut = true;
 		debutSaut = time;
 	}
 
-	if (saut && mouvement->haut)
+	if (saut)
 	{
 		if (time.asSeconds()- debutSaut.asSeconds() < 0.5)
 		{
-			float f = 11 - 22 *(time.asSeconds() - debutSaut.asSeconds());
-			setPosition(getPosition() - Vector2f(0, f));
+			test->vitesse = 11 - 22 *(time.asSeconds() - debutSaut.asSeconds());
+			decor->testCollisionHaut(test);
+
+			if (test->statut)
+			{
+				setPosition(getPosition() - Vector2f(0, test->vitesse));
+			}
+
+			else
+			{
+				saut = false;
+			}
+			
 		}
 
 		else
 		{
 			saut = false;
 		}
-
-	}
-	else
-	{
-		saut = false;
 	}
 
 	if (bouton.bas) //SE BAISSER
@@ -125,28 +145,27 @@ void Perso::update(Input *input, Decor *decor, Time time)
 	{
 		feu = true;
 		debutFeu = time;
-		tabBalle.push_back(new Balles(getPosition(), true));
+		tabBalle.push_back(new Balle(getPosition(), true));
 	}
 
-	if (time.asMilliseconds() - debutFeu.asMilliseconds() > 100)
+	if (time.asMilliseconds() - debutFeu.asMilliseconds() > 500)
 	{
 		feu = false;
 	}
 
 	for (int i = 0; i < tabBalle.size(); i++)
 	{
+		tabBalle[i]->getCollision(test);
+
+		decor->testCollisionDroite(test);
+
 		bool testBalle = tabBalle[i]->update();
 
-		if (!testBalle)
+		if (!testBalle || !test->statut)
 		{
 			tabBalle.erase(tabBalle.begin() + i);
 		}
 	}
-
-
-	//ICI CEST PAS FINI COMME TU PEUX LE VOIR
-
-	delete mouvement;
 }
 
 void Perso::dessinerPerso(RenderWindow * window)

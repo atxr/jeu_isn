@@ -16,14 +16,22 @@ le decor quoi..
 #include <string>
 #include <vector>
 #include "typedef.h"
+#include "Balle.h"
 
 class Decor
 {
 public:
 	Decor(); //Constructeur 
 	~Decor(); //Destructeur
+	int getTILE_SIZE();
+	int getMapSizeX();
+	int getMapSizeY();
+	void getMap(vector<vector<int>> * mapPointeur);
 	void loadMap(int const level, sf::RenderWindow &window); //Ca cest la fonction qui charge la map et la met dans un tableau puis la dessine sur lecran 
-	void testCollision(Mouvement * mouvement); //Et ca cest ce qui permet de tester si le personnage rentre en collision avec la map
+	void testCollisionDroite(Collision * collision); //Et ca cest ce qui permet de tester si le personnage rentre en collision avec la map
+	void testCollisionHaut(Collision * collision);
+	void testCollisionBas(Collision * collision);
+	void testCollisionGauche(Collision * collision);
 private:
 
 	std::vector<std::vector<int>> map; // ca cest un tableau de tableau de int :o en gros tableau a 2 dimensions mdrr dedans on met la map
@@ -37,9 +45,7 @@ private:
 	int MAP_SIZE_X; //Ici le nombre de bloc qu'on met en longeur
 	int MAP_SIZE_Y; //Et la en largeur. Cest 2 valeurs vont changer quand on aura la map pour linstant jai mis au hasard hein ce qui explique que la map est coupé
 
-	enum : int { TRANSPARANT, TERRE, TERRE_GAZON, ROCHE, ROCHE_GAZON, ECHELLE }; //Ca cest une sorte de tableau de int en gros transparent = 0, terre = 1 ...
-
-																				 //CONSTANTES
+	//CONSTANTES
 
 	const int TILE_SIZE = 32; //La taille des petits sprites en pixels il me semble sur notre texture
 

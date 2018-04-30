@@ -26,6 +26,26 @@ Decor::~Decor()
 {
 }
 
+int Decor::getTILE_SIZE()
+{
+	return TILE_SIZE;
+}
+
+int Decor::getMapSizeX()
+{
+	return MAP_SIZE_X;
+}
+
+int Decor::getMapSizeY()
+{
+	return MAP_SIZE_Y;
+}
+
+void Decor::getMap(vector<vector<int>>* mapPointeur)
+{
+	mapPointeur = &map;
+}
+
 void Decor::loadMap(int const level, sf::RenderWindow &window)
 {
 	//Chargement de la map
@@ -128,95 +148,119 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 
 }
 
-void Decor::testCollision(Mouvement * mouvement)
+void Decor::testCollisionDroite(Collision * collision)
 {
-	int xPerso = mouvement->position.x;
-	int yPerso = mouvement->position.y;
-	int numTileXGauche = floor(xPerso / TILE_SIZE);
-	int numTileXDroite = floor((xPerso + 25) / TILE_SIZE); //25 = longueur du perso
-	int numTileYHaut = floor(yPerso / TILE_SIZE);
-	int numTileYBas = floor((yPerso + 40) / TILE_SIZE); //40 = largeur du perso
+	int x = collision->position.x;
+	int y = collision->position.y;
 
-	int numTileXSuivant = numTileXDroite + 1;
-	int numTileXPrecedant = numTileXGauche - 1;
-	int numTileYSuivant = numTileYBas + 1;
-	int numTileYPrecedant = numTileYHaut - 1;
+	int numTileXSuivant = floor((x + collision->longueur) / TILE_SIZE) + 1;
+	int numTileYHaut = floor(y / TILE_SIZE);
+	int numTileYBas = floor((y + collision->hauteur) / TILE_SIZE);
 
-
-	//Droite
-
-	if (numTileXSuivant * TILE_SIZE > xPerso + 25 /*Longueur perso*/ + 2 /*Vitesse du perso*/)
+	if (numTileXSuivant * TILE_SIZE > x + collision->longueur + collision->vitesse)
 	{
-		mouvement->droite = true;
+		collision->statut = true;
 	}
 
 	else if (numTileXSuivant == MAP_SIZE_X)
 	{
-		mouvement->maxDroite = MAP_SIZE_X * TILE_SIZE - 25;
+		collision->valeur = MAP_SIZE_X * TILE_SIZE - 25;
 	}
 
-	else if (map[numTileYBas][numTileXSuivant] == TRANSPARANT)
+	else if (map[numTileYBas][numTileXSuivant] == TRANSPARANT && map[numTileYHaut][numTileXSuivant] == TRANSPARANT)
 	{
-		mouvement->droite = true;
+		collision->statut = true;
 	}
 
 	else
 	{
-		mouvement->maxDroite = xPerso + 0.9;
+		collision->valeur = x + 0.9;
+	}
+}
+
+void Decor::testCollisionHaut(Collision * collision)
+{
+	int x = collision->position.x;
+	int y = collision->position.y;
+
+	int numTileXGauche = floor(x / TILE_SIZE);
+	int numTileXDroite = floor((x + 25) / TILE_SIZE); //25 = longueur du perso
+	int numTileYHaut = floor(y / TILE_SIZE);
+	int numTileYPrecedant = numTileYHaut - 1;
+
+	if (y - collision->vitesse <= 0)
+	{
+		collision->valeur = 0;
 	}
 
-	//Gauche
+	else if (y - collision->vitesse < numTileYHaut * TILE_SIZE && (map[numTileYPrecedant][numTileXGauche] != TRANSPARANT || map[numTileYPrecedant][numTileXDroite] != TRANSPARANT))
+	{
+		collision->valeur = numTileYHaut * TILE_SIZE;
+	}
+
+	else
+	{
+		collision->statut = true;
+	}
+}
+
+void Decor::testCollisionBas(Collision * collision)
+{
+	int x = collision->position.x;
+	int y = collision->position.y;
+
+	int numTileXGauche = floor(x / TILE_SIZE);
+	int numTileXDroite = floor((x + collision->longueur) / TILE_SIZE); 
+	int numTileYBas = floor((y + collision->hauteur) / TILE_SIZE); 
+	int numTileYSuivant = numTileYBas + 1;
+
+	if (y + 40 + 4 >= 480)
+	{
+		collision->valeur = 480 - 40.1;
+	}
+
+	else if (y + 40 + 4 >= numTileYSuivant * TILE_SIZE && (map[numTileYSuivant][numTileXGauche] != TRANSPARANT || map[numTileYSuivant][numTileXDroite] != TRANSPARANT))
+	{
+		collision->valeur = numTileYSuivant * TILE_SIZE - 40.1;
+	}
+
+	else
+	{
+		collision->statut = true;
+	}
+}
+
+void Decor::testCollisionGauche(Collision * collision)
+{
+	int x = collision->position.x;
+	int y = collision->position.y;
+
+	int numTileXGauche = floor(x / TILE_SIZE);
+	int numTileYHaut = floor(y / TILE_SIZE);
+	int numTileYBas = floor((y + collision->hauteur) / TILE_SIZE);
 
 	if (numTileXGauche == 0)
 	{
-		if (xPerso - 2 > 0)
+		if (x - collision->vitesse > 0)
 		{
-			mouvement->gauche = true;
+			collision->statut = true;
 		}
 
 		else
 		{
-			mouvement->maxGauche = 0;
+			collision->valeur = 0;
 		}
 	}
 
-	else if (map[numTileYBas][floor((xPerso - 2) / 32)] == TRANSPARANT && map[numTileYHaut][floor((xPerso - 2) / 32)] == TRANSPARANT)
+	else if (map[numTileYBas][floor((x - 2) / 32)] == TRANSPARANT && map[numTileYHaut][floor((x - 2) / 32)] == TRANSPARANT)
 	{
-		mouvement->gauche = true;
-	}
-
-	//Haut
-
-	if (yPerso - 11 <= 0)
-	{
-		mouvement->maxHaut = 0;
-	}
-
-	else if (yPerso - 11 < numTileYHaut * TILE_SIZE && (map[numTileYPrecedant][numTileXGauche] != TRANSPARANT || map[numTileYPrecedant][numTileXDroite] != TRANSPARANT))
-	{
-		mouvement->maxHaut = numTileYHaut * TILE_SIZE;
+		collision->statut = true;
 	}
 
 	else
 	{
-		mouvement->haut = true;
-	}
-
-	//Tomber
-
-	if (yPerso + 40 + 4 >= 480)
-	{
-		mouvement->maxBas = 480 - 40.1;
-	}
-
-	else if (yPerso + 40 + 4 >=  numTileYSuivant * TILE_SIZE && (map[numTileYSuivant][numTileXGauche] != TRANSPARANT || map[numTileYSuivant][numTileXDroite] != TRANSPARANT))
-	{
-		mouvement->maxBas = numTileYSuivant * TILE_SIZE - 40.1;
-	}
-
-	else
-	{
-		mouvement->bas = true;
+		collision->valeur = x;
 	}
 }
+
 
