@@ -37,6 +37,8 @@ void Perso::update(Input *input, Decor *decor, Time time)
 	bouton.attaque = input->getStatut(ATTAQUE);
 	bouton.pause = input->getStatut(PAUSE);
 
+	bool direction = input->getDirection();
+
 	Collision * test = new Collision;
 
 	test->longueur = 25; 
@@ -148,7 +150,7 @@ void Perso::update(Input *input, Decor *decor, Time time)
 	{
 		feu = true;
 		debutFeu = time;
-		tabBalle.push_back(new Balle(getPosition(), true));
+		tabBalle.push_back(new Balle(getPosition(), direction));
 	}
 
 	if (time.asMilliseconds() - debutFeu.asMilliseconds() > 100)
@@ -160,7 +162,15 @@ void Perso::update(Input *input, Decor *decor, Time time)
 	{
 		tabBalle[i]->getCollision(test);
 
-		decor->testCollisionDroite(test);
+		if (direction)
+		{
+			decor->testCollisionDroite(test);
+		}
+
+		else
+		{
+			decor->testCollisionGauche(test);
+		}
 
 		bool testBalle = tabBalle[i]->update();
 

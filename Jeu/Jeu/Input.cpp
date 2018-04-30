@@ -98,10 +98,12 @@ void Input::update()
 			{
 			case Keyboard::Right:
 				setBouton(DROITE, true);
+				direction = true;
 				break;
 
 			case Keyboard::Left:
 				setBouton(GAUCHE, true);
+				direction = false;
 				break;
 
 			case Keyboard::Up:
@@ -164,4 +166,9 @@ void Input::update()
 			break;
 		}
 	}
+}
+
+bool Input::getDirection()
+{
+	return direction;
 }
