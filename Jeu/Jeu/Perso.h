@@ -18,15 +18,12 @@ class Perso : public sf::RectangleShape
 public:
 	Perso(); //Constructeur -> ce que l'ont fait quand on creer un nouveau perso
 	~Perso(); //Destructeur -> ce que l'ont fait quand on detruit un  perso, je men sert pas met il est la par defaut je le laisse il gene pas
-	void update(Input *input, Decor *decor, Time time); // CA on garde mdrr cest ce qui permet de faire avancer reculer bouger tester les collision etc..
 	void dessinerPerso(RenderWindow * window); //Dessine le perso ET les balles qui sont tirées par ce perso
-private:
-	int m_vie; //La vie du perso pour linstant comme ya pas dennemi elle sert a rien un peu
+	void recevoirDegat(int degat);
+protected:
+	int m_vie;
+	bool mort;
 	Mouvement *mouvement; //Ca c'est une structure (regroupement de variables dans un type qui sappelle mouvement) qui teste les collisions (voir typedef.h)
-	Bouton bouton; //Et ca une autre structure qui permet de savoir quelle entrée du clavier est appuyé etc (voir typedef.h et aussi la classe Input)
-	bool sol; //Test si le perso est sur le sol
-	bool saut; //Est ce qu'on doit sauter
-	Time debutSaut; //Debut tu temps auquel on a sauté
 	vector<Balle*> tabBalle; //Balles tirées par le perso
 	bool feu;
 	Time debutFeu;

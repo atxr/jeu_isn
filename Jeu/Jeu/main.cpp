@@ -45,7 +45,7 @@ bref tatarde pas trop ici cest un peu sale :o
 
 #include <SFML\Graphics.hpp>
 #include <iostream>
-#include "Perso.h"
+#include "Hero.h"
 #include "Balle.h"
 #include "Decor.h"
 #include "Ennemi.h"
@@ -67,8 +67,7 @@ int main()
 	Time time;
 
 	//Perso
-	Perso rect;
-	bool position(true); //Vers la droite par défaut si "true"
+	Hero rect;
 
 	//Decor
 	Decor decor;

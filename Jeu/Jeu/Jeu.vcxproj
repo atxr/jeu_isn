@@ -22,6 +22,7 @@
     <ClCompile Include="Balle.cpp" />
     <ClCompile Include="Decor.cpp" />
     <ClCompile Include="Ennemi.cpp" />
+    <ClCompile Include="Hero.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Perso.cpp" />
@@ -30,6 +31,7 @@
     <ClInclude Include="Balle.h" />
     <ClInclude Include="Decor.h" />
     <ClInclude Include="Ennemi.h" />
+    <ClInclude Include="Hero.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Perso.h" />
     <ClInclude Include="typedef.h" />
