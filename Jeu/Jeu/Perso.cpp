@@ -2,8 +2,13 @@
 #include <iostream>
 
 
-Perso::Perso() : RectangleShape::RectangleShape(Vector2f(25, 40)), feu(false), mort(false) //Attention la taille est dans la fonctioon update et la fonction getEchelle
+Perso::Perso() 
 {
+}
+
+Perso::Perso(int x, int y) : RectangleShape::RectangleShape(Vector2f(25, 40)), feu(false), mort(false) //Attention la taille est dans la fonctioon update et la fonction getEchelle
+{
+	setPosition(Vector2f(x, y));
 }
 
 

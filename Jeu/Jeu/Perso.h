@@ -17,9 +17,11 @@ class Perso : public sf::RectangleShape
 {
 public:
 	Perso(); //Constructeur -> ce que l'ont fait quand on creer un nouveau perso
+	Perso(int x, int y);
 	~Perso(); //Destructeur -> ce que l'ont fait quand on detruit un  perso, je men sert pas met il est la par defaut je le laisse il gene pas
 	void dessinerPerso(RenderWindow * window); //Dessine le perso ET les balles qui sont tirées par ce perso
 	void recevoirDegat(int degat);
+	virtual void updatePerso(Input *input, Decor *decor, Time time) = 0;
 protected:
 	int m_vie;
 	bool mort;

@@ -50,24 +50,25 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 {
 	//Chargement de la map
 
-	string fileDir;
+	string fileDirMap;
+	string fileDirPerso;
 
 	switch (level)
 	{
 	case 1:
-		fileDir = "level1.txt";
+		fileDirMap = "level1map";
 		break;
 	case 2:
-		fileDir = "level2.txt";
+		fileDirMap = "level2map";
 		break;
 	case 3:
-		fileDir = "level3.txt";
+		fileDirMap = "level3map";
 		break;
 	}
 
-	ifstream fichierLevel(fileDir);
+	ifstream fichierLevelMap(fileDirMap);
 
-	if (fichierLevel)
+	if (fichierLevelMap)
 	{
 		vector<int> line;
 		string buffer;
@@ -81,7 +82,7 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 		{
 			for (int xPosFichier = 0; xPosFichier < 1; xPosFichier++)
 			{
-				getline(fichierLevel, buffer);
+				getline(fichierLevelMap, buffer);
 				istringstream iss(buffer);
 				for (int i = 0; i < MAP_SIZE_X; i++)
 				{
@@ -94,13 +95,15 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 			line.clear();
 		}
 
-		fichierLevel.close();
+		fichierLevelMap.close();
 	}
 
 	else
 	{
 		cerr << "Impossible d'ouvrir le fichier level." << endl;
 	}
+
+
 
 	//Dessin
 

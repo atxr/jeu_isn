@@ -10,6 +10,11 @@ Hero::Hero() : Perso::Perso()
 	setPosition(120, 400);
 }
 
+Hero::Hero(int x, int y) : Perso(x,y)
+{
+	setFillColor(Color::Red);
+}
+
 
 Hero::~Hero()
 {
@@ -17,7 +22,7 @@ Hero::~Hero()
 
 
 
-void Hero::update(Input *input, Decor *decor, Time time)
+void Hero::updatePerso(Input *input, Decor *decor, Time time)
 {
 	bouton.droite = input->getStatut(DROITE);
 	bouton.gauche = input->getStatut(GAUCHE);

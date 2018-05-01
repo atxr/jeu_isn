@@ -32,6 +32,7 @@ ET POUR FINIR JE SUIS EN TRAIN DE NETOYER LE CODE DONC YA PAS MAL DE TRUC BIZZAR
 IL NOUS FAUDRAIT UN NOM AUSSI 
 */
 
+/*ATTTENTION BEUG DE COLLISION IL FAUT RAJOUTER UN POINT DE TEST AU MILIEU DU PERSO*/
 
 /*
 main.cpp
@@ -45,11 +46,63 @@ bref tatarde pas trop ici cest un peu sale :o
 
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#include "Perso.h"
 #include "Hero.h"
 #include "Balle.h"
 #include "Decor.h"
 #include "Ennemi.h"
 #include <math.h>
+
+void loadPerso(vector<Perso*> * tabPerso)
+{
+	string fileDirPerso("level1perso");
+
+	ifstream fichierLevelPerso(fileDirPerso);
+
+	if (fichierLevelPerso)
+	{
+		int a, b, c;
+		string buffer;
+
+		for (int i = 0; i < 4; i++)
+		{
+			getline(fichierLevelPerso, buffer);
+			istringstream iss(buffer);
+
+			iss >> a >> b >> c;
+
+			switch (a)
+			{
+			case 0:
+				tabPerso->insert(tabPerso->begin(), new Hero(b, c));
+				break;
+
+			case 1:
+				tabPerso->insert(tabPerso->begin() + i, new Ennemi(b, c));
+				break;
+
+			case 2:
+				tabPerso->insert(tabPerso->begin() + i, new Ennemi(b, c));
+				break;
+
+			case 3:
+				tabPerso->insert(tabPerso->begin() + i, new Ennemi(b, c));
+				break;
+
+			default:
+				break;
+
+			}
+		}
+
+		fichierLevelPerso.close();
+	}
+
+	else
+	{
+		cerr << "Impossible d'ouvrir le fichier level." << endl;
+	}
+}
 
 int main()
 {
@@ -67,7 +120,8 @@ int main()
 	Time time;
 
 	//Perso
-	Hero rect;
+	vector<Perso*> tabPerso;
+	bool persoCharge = false;
 
 	//Decor
 	Decor decor;
@@ -79,7 +133,6 @@ int main()
 
 	//Boucle de jeu
 
-
 	while (window.isOpen())
 	{
 		//Temps
@@ -90,7 +143,11 @@ int main()
 
 		input.update(); //On met à jour les évenements
 
-
+		if (!persoCharge)
+		{
+			persoCharge = true;
+			loadPerso(&tabPerso);
+		}
 		
 
 		/////////////////////////////////////////////////////////////////////////////////
@@ -102,8 +159,13 @@ int main()
 
 		decor.loadMap(1, window); //On dessine la map
 
-		rect.update(&input, &decor, time); //On met a jour le perso
-		rect.dessinerPerso(&window); //Dessin du perso et des balles
+		for (int i = 0; i < tabPerso.size(); i++)
+		{
+			tabPerso[i]->updatePerso(&input, &decor, time); //On met a jour le perso
+			tabPerso[i]->dessinerPerso(&window); //Dessin du perso et des balles
+		}
+
+		
 
 		window.display();
 	}
