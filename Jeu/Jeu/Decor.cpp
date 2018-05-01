@@ -116,6 +116,10 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 				tileSprite.setTextureRect(IntRect(TRANSPARANT_X, TRANSPARANT_Y, TILE_SIZE, TILE_SIZE));
 				break;
 
+			case ECHELLE:
+				tileSprite.setTextureRect(IntRect(ECHELLE_X, ECHELLE_Y, TILE_SIZE, TILE_SIZE));
+				break;
+
 			case TERRE:
 				tileSprite.setTextureRect(IntRect(TERRE_X, TERRE_ET_ROCHE_Y, TILE_SIZE, TILE_SIZE));
 				break;
@@ -130,10 +134,6 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 
 			case ROCHE_GAZON:
 				tileSprite.setTextureRect(IntRect(ROCHE_GAZON_X, TERRE_ET_ROCHE_Y, TILE_SIZE, TILE_SIZE));
-				break;
-
-			case ECHELLE:
-				tileSprite.setTextureRect(IntRect(ECHELLE_X, ECHELLE_Y, TILE_SIZE, TILE_SIZE));
 				break;
 
 			default:
@@ -167,7 +167,7 @@ void Decor::testCollisionDroite(Collision * collision)
 		collision->valeur = MAP_SIZE_X * TILE_SIZE - 25;
 	}
 
-	else if (map[numTileYBas][numTileXSuivant] == TRANSPARANT && map[numTileYHaut][numTileXSuivant] == TRANSPARANT)
+	else if (map[numTileYBas][numTileXSuivant] <= 1 && (map[numTileYHaut][numTileXSuivant]) <= 1)
 	{
 		collision->statut = true;
 	}
@@ -191,9 +191,9 @@ void Decor::testCollisionHaut(Collision * collision)
 	if (y - collision->vitesse <= 0)
 	{
 		collision->valeur = 0;
-	}
+	} 
 
-	else if (y - collision->vitesse < numTileYHaut * TILE_SIZE && (map[numTileYPrecedant][numTileXGauche] != TRANSPARANT || map[numTileYPrecedant][numTileXDroite] != TRANSPARANT))
+	else if (y - collision->vitesse < numTileYHaut * TILE_SIZE && (map[numTileYPrecedant][numTileXGauche] > 1 || map[numTileYPrecedant][numTileXDroite] > 1))
 	{
 		collision->valeur = numTileYHaut * TILE_SIZE;
 	}
@@ -210,18 +210,25 @@ void Decor::testCollisionBas(Collision * collision)
 	int y = collision->position.y;
 
 	int numTileXGauche = floor(x / TILE_SIZE);
-	int numTileXDroite = floor((x + collision->longueur) / TILE_SIZE); 
-	int numTileYBas = floor((y + collision->hauteur) / TILE_SIZE); 
-	int numTileYSuivant = numTileYBas + 1;
+	int numTileXDroite = floor((x + collision->longueur) / TILE_SIZE);
+	int numTileYSuivant = floor((y + collision->hauteur) / TILE_SIZE) + 1;
 
-	if (y + 40 + 4 >= 480)
+	if (y + collision->hauteur + collision->vitesse >= 480)
 	{
-		collision->valeur = 480 - 40.1;
+		collision->valeur = 480 - (collision->hauteur + 0.1);
 	}
 
-	else if (y + 40 + 4 >= numTileYSuivant * TILE_SIZE && (map[numTileYSuivant][numTileXGauche] != TRANSPARANT || map[numTileYSuivant][numTileXDroite] != TRANSPARANT))
+	else if (y + collision->hauteur + collision->vitesse >= numTileYSuivant * TILE_SIZE)
 	{
-		collision->valeur = numTileYSuivant * TILE_SIZE - 40.1;
+		if (map[numTileYSuivant][numTileXGauche] > 1 || map[numTileYSuivant][numTileXDroite] > 1)
+		{
+			collision->valeur = numTileYSuivant * TILE_SIZE - (collision->hauteur + 0.1);
+		}
+
+		else
+		{
+			collision->statut = true;
+		}
 	}
 
 	else
@@ -252,7 +259,7 @@ void Decor::testCollisionGauche(Collision * collision)
 		}
 	}
 
-	else if (map[numTileYBas][floor((x - 2) / 32)] == TRANSPARANT && map[numTileYHaut][floor((x - 2) / 32)] == TRANSPARANT)
+	else if (map[numTileYBas][floor((x - collision->vitesse) / TILE_SIZE)] <= 1 && map[numTileYHaut][floor((x - collision->vitesse) / TILE_SIZE)] <= 1)
 	{
 		collision->statut = true;
 	}
@@ -263,4 +270,15 @@ void Decor::testCollisionGauche(Collision * collision)
 	}
 }
 
+bool Decor::getEchelle(Vector2f const position)
+{
+	if (map[floor((position.y + 40) / TILE_SIZE)][floor(position.x / TILE_SIZE)] == ECHELLE || map[floor((position.y + 40) / TILE_SIZE)][floor((position.x + 25) / TILE_SIZE)] == ECHELLE)
+	{
+		return true;
+	}
 
+	else
+	{
+		return false;
+	}
+}

@@ -45,4 +45,4 @@ typedef struct
 enum : int { DROITE, GAUCHE, HAUT, BAS, ATTAQUE, PAUSE };
 
 //Ca cest une sorte de tableau de int en gros transparent = 0, terre = 1 ...
-enum : int { TRANSPARANT, TERRE, TERRE_GAZON, ROCHE, ROCHE_GAZON, ECHELLE }; 
+enum : int { TRANSPARANT, ECHELLE, TERRE, TERRE_GAZON, ROCHE, ROCHE_GAZON};

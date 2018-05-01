@@ -20,6 +20,6 @@ private:
 
 	//Constante
 
-	int VITESSE = 15;
+	int VITESSE = 12;
 };
 

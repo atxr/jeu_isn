@@ -17,10 +17,8 @@ class Perso : public sf::RectangleShape
 {
 public:
 	Perso(); //Constructeur -> ce que l'ont fait quand on creer un nouveau perso
-	~Perso(); //Destructeur -> ce que l'ont fait quand on detruit un  perso, je men sert pas met il est la par defaut alors pour linstant je le laisse il gene pas
-	void avancer(); //Ca je vais supprimer fait pas attention
-	void reculer(); //Ca aussi
-	void update(Input *input, Decor *decor, Time time); // CA NAAAN on garde mdrr cest ce qui permet de faire avancer reculer bouger tester les collision etc..
+	~Perso(); //Destructeur -> ce que l'ont fait quand on detruit un  perso, je men sert pas met il est la par defaut je le laisse il gene pas
+	void update(Input *input, Decor *decor, Time time); // CA on garde mdrr cest ce qui permet de faire avancer reculer bouger tester les collision etc..
 	void dessinerPerso(RenderWindow * window); //Dessine le perso ET les balles qui sont tirées par ce perso
 private:
 	int m_vie; //La vie du perso pour linstant comme ya pas dennemi elle sert a rien un peu

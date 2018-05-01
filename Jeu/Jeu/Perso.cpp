@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Perso::Perso() : RectangleShape::RectangleShape(Vector2f(25, 40)) //Attention la taille est dans la fonctioon update
+Perso::Perso() : RectangleShape::RectangleShape(Vector2f(25, 40)) //Attention la taille est dans la fonctioon update et la fonction getEchelle
 {
 	setFillColor(Color::Red);
 	setPosition(120, 400);
@@ -13,18 +13,6 @@ Perso::Perso() : RectangleShape::RectangleShape(Vector2f(25, 40)) //Attention la
 
 Perso::~Perso()
 {
-}
-
-
-void Perso::avancer()
-{
-	setPosition(Vector2f(getPosition() + Vector2f(2, 0)));
-}
-
-
-void Perso::reculer()
-{
-	setPosition(Vector2f(getPosition() + Vector2f(-2, 0)));
 }
 
 
@@ -85,32 +73,65 @@ void Perso::update(Input *input, Decor *decor, Time time)
 
 	//TOMBER
 
-	test->vitesse = GRAVITE;
-
-	decor->testCollisionBas(test);
-
-	if (test->statut) 
+	if (decor->getEchelle(getPosition()))
 	{
-		setPosition(getPosition() + Vector2f(0, GRAVITE));
-		sol = false;
+		saut = false;
 	}
 
 	else
 	{
-		setPosition(Vector2f(getPosition().x, test->valeur));
-		sol = true;
-	}
+		test->vitesse = GRAVITE;
 
-	test->position = getPosition();
-	test->statut = false;
-	test->valeur = 0;
+		decor->testCollisionBas(test);
+
+		if (test->statut)
+		{
+			setPosition(getPosition() + Vector2f(0, GRAVITE));
+			sol = false;
+		}
+
+		else
+		{
+			setPosition(Vector2f(getPosition().x, test->valeur));
+			sol = true;
+		}
+
+		test->position = getPosition();
+		test->statut = false;
+		test->valeur = 0;
+	}
+		
 
 	//SAUTER
 
-	if (bouton.haut && sol)
+	if (bouton.haut)
 	{
-		saut = true;
-		debutSaut = time;
+		if (decor->getEchelle(getPosition()))
+		{
+			test->vitesse = 5;
+			decor->testCollisionHaut(test);
+
+			if (test->statut)
+			{
+				setPosition(getPosition() - Vector2f(0, test->vitesse));
+			}
+
+			else
+			{
+				setPosition(Vector2f(getPosition().x, test->valeur));
+			}
+
+			test->position = getPosition();
+			test->statut = false;
+			test->valeur = 0;
+
+		}
+
+		else if (sol)
+		{
+			saut = true;
+			debutSaut = time;
+		}
 	}
 
 	if (saut)
@@ -143,7 +164,25 @@ void Perso::update(Input *input, Decor *decor, Time time)
 
 	if (bouton.bas) //SE BAISSER
 	{
+		if (decor->getEchelle(getPosition()))
+		{
+			test->vitesse = 2;
+			decor->testCollisionBas(test);
 
+			if (test->statut)
+			{
+				setPosition(getPosition() + Vector2f(0, test->vitesse));
+			}
+
+			else
+			{
+				setPosition(Vector2f(getPosition().x, test->valeur));
+			}
+
+			test->position = getPosition();
+			test->statut = false;
+			test->valeur = 0;
+		}
 	}
 
 	if (bouton.attaque && !feu)
