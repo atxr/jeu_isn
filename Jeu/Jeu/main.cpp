@@ -159,10 +159,13 @@ int main()
 
 		decor.loadMap(1, window); //On dessine la map
 
-		for (int i = 0; i < tabPerso.size(); i++)
+		tabPerso[0]->updatePerso(&input, &decor, time, Vector2f()); //On met a jour le hero
+		tabPerso[0]->dessinerPerso(&window); //Dessin du hero et de ses balles
+
+		for (int i = 1; i < tabPerso.size(); i++)
 		{
-			tabPerso[i]->updatePerso(&input, &decor, time); //On met a jour le perso
-			tabPerso[i]->dessinerPerso(&window); //Dessin du perso et des balles
+			tabPerso[i]->updatePerso(&Input(), &decor, Time(), tabPerso[0]->getPosition()); //On met a jour les ennemis
+			tabPerso[i]->dessinerPerso(&window); //Dessin des ennemmis et de leurs balles
 		}
 
 		

@@ -22,7 +22,7 @@ Hero::~Hero()
 
 
 
-void Hero::updatePerso(Input *input, Decor *decor, Time time)
+void Hero::updatePerso(Input *input, Decor *decor, Time time, Vector2f positionHero)
 {
 	bouton.droite = input->getStatut(DROITE);
 	bouton.gauche = input->getStatut(GAUCHE);

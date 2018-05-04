@@ -6,13 +6,15 @@ Ennemi::Ennemi()
 {
 }
 
-Ennemi::Ennemi(int x, int y) : Perso(x,y)
+Ennemi::Ennemi(int x, int y) : Perso(x,y), occupe(false), pause(true)
 {
 	setFillColor(Color::Blue);
 }
 
-void Ennemi::updatePerso(Input * input, Decor * decor, Time time)
+void Ennemi::updatePerso(Input *input, Decor *decor, Time time, Vector2f positionHero)
 {
+	//TEST DE GRAVITE
+
 	Collision * test = new Collision;
 
 	test->longueur = 25;
@@ -37,6 +39,122 @@ void Ennemi::updatePerso(Input * input, Decor * decor, Time time)
 	test->position = getPosition();
 	test->statut = false;
 	test->valeur = 0;
+
+	//ACTION A FAIRE
+
+	if (positionHero.y >= getPosition().y - 40 /*Hauteur*/ && positionHero.y <= getPosition().y + 40 && !feu)
+	{
+		feu = true;
+		chronoFeu.restart();
+	}
+
+	if (feu && chronoFeu.getElapsedTime().asSeconds() > 0.5)
+	{
+		if (positionHero.x >= getPosition().x)
+		{
+			direction = true;
+		}
+
+		else
+		{
+			direction = false;
+		}
+
+		tabBalle.push_back(new Balle(getPosition(), direction));
+
+		feu = false;
+	}
+
+	else
+	{
+		if (pause)
+		{
+			if (chronoAction.getElapsedTime().asSeconds() > rand() % 4 + 3 /*Nombre aleatoire entre 4 et 6*/)
+			{
+				pause = false;
+			}
+		}
+
+		else if (!occupe)
+		{
+			action = rand() % 3;
+			if (action == 3)
+			{
+				action = 0;
+			}
+			occupe = true;
+			chronoAction.restart();
+		}
+
+		else
+		{
+			switch (action)
+			{
+			case AVANCER_DROITE:
+				decor->testCollisionDroite(test);
+
+				if (test->statut)
+				{
+					setPosition(getPosition() + Vector2f(2, 0));
+				}
+				else
+				{
+					setPosition(Vector2f(test->valeur, getPosition().y)); //On colle le perso a la paroi
+					occupe = false;
+					pause = true;
+				}
+
+				break;
+
+			case AVANCER_GAUCHE:
+				decor->testCollisionGauche(test);
+
+				if (test->statut)
+				{
+					setPosition(getPosition() - Vector2f(2, 0));
+				}
+				else
+				{
+					setPosition(Vector2f(test->valeur, getPosition().y)); //On colle le perso a la paroi
+					occupe = false;
+					pause = true;
+				}
+
+				break;
+			default:
+				break;
+			}
+
+
+			if (chronoAction.getElapsedTime().asSeconds() > 0.5)
+			{
+				occupe = false;
+				pause = true;
+				chronoAction.restart();
+			}
+
+		}
+	}
+
+	for (int i = 0; i < tabBalle.size(); i++)
+	{
+		tabBalle[i]->getCollision(test);
+
+		if (direction)
+		{
+			decor->testCollisionDroite(test);
+		}
+
+		else
+		{
+			decor->testCollisionGauche(test);
+		}
+
+		if (!tabBalle[i]->update() || !test->statut)
+		{
+			tabBalle.erase(tabBalle.begin() + i);
+		}
+	}
 }
 
 

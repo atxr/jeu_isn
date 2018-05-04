@@ -47,6 +47,8 @@ void Balle::getCollision(Collision * test)
 	test->longueur = 15;
 	test->hauteur = 5;
 	test->position = getPosition();
+	test->valeur = 0;
+	test->statut = false;
 
 	if (direction)
 	{
