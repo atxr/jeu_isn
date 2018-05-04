@@ -285,3 +285,51 @@ bool Decor::getEchelle(Vector2f const position)
 		return false;
 	}
 }
+
+bool Decor::testVisee(Vector2f position, Vector2f positionHero)
+{
+	bool test(false);
+	bool fin(false);
+	int dir;
+
+	if (position.x < positionHero.x)
+	{
+		dir = 1;
+	}
+
+	else
+	{
+		dir = -1;
+	}
+
+	int numTileY = floor((position.y + 20) / TILE_SIZE);
+	int numTileXHero = floor(positionHero.x / TILE_SIZE);
+	int numTileX = floor(position.x / TILE_SIZE);
+
+	if (numTileX == numTileXHero)
+	{
+		test = true;
+	}
+
+	else
+	{
+		int i = 0;
+
+		while (!fin)
+		{
+			test = map[numTileY][numTileX + i * dir] <= 1;
+
+			if (numTileX + (i + 1) * dir == numTileXHero || !test)
+			{
+				fin = true;
+			}
+
+			else
+			{
+				i++;
+			}
+		}
+	}
+
+	return (positionHero.y >= position.y - 40 /*Hauteur*/ && positionHero.y <= position.y + 40 && fabs(position.x - positionHero.x) < 500 && test);
+}

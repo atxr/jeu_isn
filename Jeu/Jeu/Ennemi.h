@@ -7,6 +7,7 @@ La classe ennemi ... vide ...
 #include "Perso.h"
 #include <ctime>
 #include <cstdlib>
+#include <cmath>
 
 class Ennemi : public Perso
 {

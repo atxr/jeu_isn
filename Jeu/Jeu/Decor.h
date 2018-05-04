@@ -33,6 +33,8 @@ public:
 	void testCollisionBas(Collision * collision);
 	void testCollisionGauche(Collision * collision);
 	bool getEchelle(Vector2f const position);
+	bool testVisee(Vector2f position, Vector2f positionHero);
+
 private:
 
 	std::vector<std::vector<int>> map; // ca cest un tableau de tableau de int :o en gros tableau a 2 dimensions mdrr dedans on met la map

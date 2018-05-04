@@ -225,3 +225,4 @@ void Hero::updatePerso(Input *input, Decor *decor, Time time, Vector2f positionH
 		}
 	}
 }
+

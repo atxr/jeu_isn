@@ -42,7 +42,7 @@ void Ennemi::updatePerso(Input *input, Decor *decor, Time time, Vector2f positio
 
 	//ACTION A FAIRE
 
-	if (positionHero.y >= getPosition().y - 40 /*Hauteur*/ && positionHero.y <= getPosition().y + 40 && !feu)
+	if (decor->testVisee(getPosition(), positionHero) && !feu)
 	{
 		feu = true;
 		chronoFeu.restart();
