@@ -20,6 +20,8 @@ private:
 	int action;
 	bool occupe;
 	bool pause;
+	bool finFeu;
+	bool pauseFeu;
 	Clock chronoAction;
 	bool direction;
 	Clock chronoFeu;

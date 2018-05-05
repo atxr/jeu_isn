@@ -331,5 +331,5 @@ bool Decor::testVisee(Vector2f position, Vector2f positionHero)
 		}
 	}
 
-	return (positionHero.y >= position.y - 40 /*Hauteur*/ && positionHero.y <= position.y + 40 && fabs(position.x - positionHero.x) < 500 && test);
+	return (positionHero.y >= position.y - 80 /*Hauteur*/ && positionHero.y <= position.y + 80 && fabs(position.x - positionHero.x) < 500 && test);
 }

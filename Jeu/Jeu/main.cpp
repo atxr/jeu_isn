@@ -168,8 +168,6 @@ int main()
 			tabPerso[i]->dessinerPerso(&window); //Dessin des ennemmis et de leurs balles
 		}
 
-		
-
 		window.display();
 	}
 }

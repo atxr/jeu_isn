@@ -42,27 +42,46 @@ void Ennemi::updatePerso(Input *input, Decor *decor, Time time, Vector2f positio
 
 	//ACTION A FAIRE
 
-	if (decor->testVisee(getPosition(), positionHero) && !feu)
+	if (decor->testVisee(getPosition(), positionHero))
 	{
-		feu = true;
-		chronoFeu.restart();
+		if (!pauseFeu)
+		{
+			chronoFeu.restart();
+			pauseFeu = true;
+		}
+
+		else if (chronoFeu.getElapsedTime().asSeconds() > 0.5)
+		{
+			feu = true;
+			chronoFeu.restart();
+		}
 	}
 
-	if (feu && chronoFeu.getElapsedTime().asSeconds() > 0.5)
+	else 
 	{
-		if (positionHero.x >= getPosition().x)
-		{
-			direction = true;
-		}
 
-		else
-		{
-			direction = false;
-		}
-
-		tabBalle.push_back(new Balle(getPosition(), direction));
-
+		pauseFeu = false;
 		feu = false;
+	}
+
+	if (feu && chronoFeu.getElapsedTime().asSeconds() > ((rand() % 200) + 0.5) / 100.f)
+	{
+		if (1)
+		{
+			if (positionHero.x >= getPosition().x)
+			{
+				direction = true;
+			}
+
+			else
+			{
+				direction = false;
+			}
+
+			tabBalle.push_back(new Balle(getPosition(), direction));
+
+			feu = false;
+		}
 	}
 
 	else
