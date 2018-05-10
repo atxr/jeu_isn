@@ -11,7 +11,7 @@ Ennemi::Ennemi(int x, int y) : Perso(x,y), occupe(false), pause(true)
 	setFillColor(Color::Blue);
 }
 
-void Ennemi::updatePerso(Input *input, Decor *decor, Time time, Vector2f positionHero)
+void Ennemi::updatePerso(Decor *decor, Vector2f positionHero)
 {
 	//TEST DE GRAVITE
 
