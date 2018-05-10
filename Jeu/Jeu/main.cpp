@@ -29,7 +29,7 @@ VOILAAAA DIS MOI SI TA LE MOINDRE PB
 
 ET POUR FINIR JE SUIS EN TRAIN DE NETOYER LE CODE DONC YA PAS MAL DE TRUC BIZZARD HEIN MAIS JE TE DIRAIS QD JAURAIS TOUT BIEN NETOOYER
 
-IL NOUS FAUDRAIT UN NOM AUSSI 
+IL NOUS FAUDRAIT UN NOM AUSSI
 */
 
 /*ATTTENTION BEUG DE COLLISION IL FAUT RAJOUTER UN POINT DE TEST AU MILIEU DU PERSO*/
@@ -53,7 +53,7 @@ bref tatarde pas trop ici cest un peu sale :o
 #include "Ennemi.h"
 #include <math.h>
 
-void loadPerso(vector<Perso*> * tabPerso)
+void loadPerso(vector<Hero*> * tabHero, vector<Ennemi*> * tabPerso)
 {
 	string fileDirPerso("level1perso");
 
@@ -74,19 +74,19 @@ void loadPerso(vector<Perso*> * tabPerso)
 			switch (a)
 			{
 			case 0:
-				tabPerso->insert(tabPerso->begin(), new Hero(b, c));
+				tabHero->push_back(new Hero(b, c));
 				break;
 
 			case 1:
-				tabPerso->insert(tabPerso->begin() + i, new Ennemi(b, c));
+				tabPerso->push_back(new Ennemi(b, c));
 				break;
 
 			case 2:
-				tabPerso->insert(tabPerso->begin() + i, new Ennemi(b, c));
+				tabPerso->push_back(new Ennemi(b, c));
 				break;
 
 			case 3:
-				tabPerso->insert(tabPerso->begin() + i, new Ennemi(b, c));
+				tabPerso->push_back(new Ennemi(b, c));
 				break;
 
 			default:
@@ -111,16 +111,21 @@ int main()
 	//Initialisation
 
 	//Parametres de la fenetre
-	sf::RenderWindow window({ 800,480 }, "Hello World!"); //GRAVITE ATTENTION DECOR.CPP
+	int const width = 960;
+	int const height = 640;
+	sf::RenderWindow window(VideoMode(width, height), "Hello World!"/*, Style::Fullscreen*/);
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
+	sf::View view;
+	Vector2f positionBackground;
 
 	//Horloge
 	sf::Clock clock;
 	Time time;
 
 	//Perso
-	vector<Perso*> tabPerso;
+	vector<Ennemi*> tabEnnemi;
+	vector<Hero*> tabHero;
 	bool persoCharge = false;
 
 	//Decor
@@ -128,6 +133,18 @@ int main()
 
 	//Input
 	Input input(&window);
+
+	Texture backgroundTexture;
+	Sprite background;
+
+	if (!backgroundTexture.loadFromFile("graphics/background.png"))
+	{
+		cerr << "Erreur, texture introuvable." << endl;
+	}
+	else
+	{
+		background.setTexture(backgroundTexture);
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -139,16 +156,16 @@ int main()
 
 		time = clock.getElapsedTime(); //time prend la valeur du temps au moment du début de la boucle
 
-		//Evenements
+									   //Evenements
 
 		input.update(); //On met à jour les évenements
 
 		if (!persoCharge)
 		{
 			persoCharge = true;
-			loadPerso(&tabPerso);
+			loadPerso(&tabHero, &tabEnnemi);
 		}
-		
+
 
 		/////////////////////////////////////////////////////////////////////////////////
 
@@ -157,16 +174,34 @@ int main()
 
 		window.clear();
 
+		if (tabHero[0]->getPosition().x < width / 2)
+		{
+			positionBackground = Vector2f(0, 0);
+		}
+
+		else
+		{
+			positionBackground = Vector2f(tabHero[0]->getPosition().x - 480, 0);
+		}
+
+		background.setPosition(positionBackground - Vector2f(10, 0)); // on le decale de 10px vers la gauche pour eviter les beugs
+		window.draw(background);
+
+
 		decor.loadMap(1, window); //On dessine la map
 
-		tabPerso[0]->updatePerso(&input, &decor, time, Vector2f()); //On met a jour le hero
-		tabPerso[0]->dessinerPerso(&window); //Dessin du hero et de ses balles
+		tabHero[0]->updatePerso(&input, &decor, time); //On met a jour le hero
+		tabHero[0]->dessinerPerso(&window); //Dessin du hero et de ses balles
 
-		for (int i = 1; i < tabPerso.size(); i++)
+		for (int i = 0; i < tabEnnemi.size(); i++)
 		{
-			tabPerso[i]->updatePerso(&Input(), &decor, Time(), tabPerso[0]->getPosition()); //On met a jour les ennemis
-			tabPerso[i]->dessinerPerso(&window); //Dessin des ennemmis et de leurs balles
+			tabEnnemi[i]->updatePerso(&decor, tabHero[0]->getPosition()); //On met a jour les ennemis
+			tabEnnemi[i]->dessinerPerso(&window); //Dessin des ennemmis et de leurs balles
 		}
+
+		view.reset(FloatRect(positionBackground, Vector2f(864, 480)));
+
+		window.setView(view);
 
 		window.display();
 	}
