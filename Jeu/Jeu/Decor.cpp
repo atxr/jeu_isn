@@ -74,13 +74,13 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 		string buffer;
 
 		MAP_SIZE_X = 50;
-		MAP_SIZE_Y = 20;
+		MAP_SIZE_Y = 15;
 
 		map.clear();
 
 		for (int y = 0; y < MAP_SIZE_Y; y++)
 		{
-			for (int xPosFichier = 0; xPosFichier < 1; xPosFichier++)
+			for (int x = 0; x < 1; x++)
 			{
 				getline(fichierLevelMap, buffer);
 				istringstream iss(buffer);
@@ -107,11 +107,9 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 
 	//Dessin
 
-	window.draw(background);
-
 	for (int y = 0; y < MAP_SIZE_Y; y++)
 	{
-		for (int x = 0; x < MAP_SIZE_Y; x++)
+		for (int x = 0; x < MAP_SIZE_X; x++)
 		{
 			switch (map[y][x])
 			{
@@ -194,7 +192,7 @@ void Decor::testCollisionHaut(Collision * collision)
 	if (y - collision->vitesse <= 0)
 	{
 		collision->valeur = 0;
-	} 
+	}
 
 	else if (y - collision->vitesse < numTileYHaut * TILE_SIZE && (map[numTileYPrecedant][numTileXGauche] > 1 || map[numTileYPrecedant][numTileXDroite] > 1))
 	{
