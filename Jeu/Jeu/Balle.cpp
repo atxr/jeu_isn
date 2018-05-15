@@ -6,7 +6,7 @@ Balle::Balle()
 {
 }
 
-Balle::Balle(sf::Vector2f const a, bool dir) : sf::RectangleShape::RectangleShape(sf::Vector2f(15, 5)), direction(dir)
+Balle::Balle(sf::Vector2f const a, bool dir) : sf::RectangleShape::RectangleShape(sf::Vector2f(15, 5)), direction(dir) //ATTENTION TEST BALLE LIE
 {
 	setFillColor(sf::Color::Yellow);
 	setPosition(a + sf::Vector2f(0, 20)); //ATTENTION TEST DE VISEE DE DECOR LIE A CA

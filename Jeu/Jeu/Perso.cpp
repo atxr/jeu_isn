@@ -6,8 +6,9 @@ Perso::Perso()
 {
 }
 
-Perso::Perso(int x, int y) : RectangleShape::RectangleShape(Vector2f(25, 40)), feu(false), mort(false) //Attention la taille est dans la fonctioon update et la fonction getEchelle
+Perso::Perso(int x, int y) : RectangleShape::RectangleShape(Vector2f(25, 40)) //Attention la taille est dans la fonctioon update et la fonction getEchelle
 {
+	feu = false;
 	setPosition(Vector2f(x, y));
 }
 
@@ -35,5 +36,43 @@ void Perso::recevoirDegat(int degat)
 	{
 		mort = true;
 	}
+}
+
+bool Perso::testBalle(Perso * cible)
+{
+	bool result (false);
+
+	for (int i = 0; i < tabBalle.size(); i++)
+	{
+		if (tabBalle[i]->getDirection())
+		{
+			if (tabBalle[i]->getPosition().x + 15 /*longueur balle*/ > cible->getPosition().x && tabBalle[i]->getPosition().x < cible->getPosition().x + 25 /*longueur perso*/ && tabBalle[i]->getPosition().y > cible->getPosition().y && tabBalle[i]->getPosition().y + 5 /*hauteur balle*/ < cible->getPosition().y + 40 /*hauteur du perso*/)
+			{
+				cible->recevoirDegat(nbDegat);
+				delete tabBalle[i];
+				tabBalle.erase(tabBalle.begin() + i);
+				result = cible->estMort();
+			}
+		}
+
+		else
+		{
+			if (tabBalle[i]->getPosition().x < cible->getPosition().x + 25 /*longueur perso*/ && tabBalle[i]->getPosition().x + 15 /*longueur balle*/ > cible->getPosition().x && tabBalle[i]->getPosition().y > cible->getPosition().y && tabBalle[i]->getPosition().y + 5 /*hauteur balle*/ < cible->getPosition().y + 40 /*hauteur du perso*/)
+			{
+				cible->recevoirDegat(nbDegat);
+				delete tabBalle[i];
+				tabBalle.erase(tabBalle.begin() + i);
+				result = cible->estMort();
+			}
+		}
+	}
+
+	return result;
+}
+
+bool Perso::estMort()
+{
+	cout << m_vie;
+	return (m_vie <= 0);
 }
 

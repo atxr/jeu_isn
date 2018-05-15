@@ -64,7 +64,7 @@ void loadPerso(vector<Hero*> * tabHero, vector<Ennemi*> * tabPerso)
 		int a, b, c;
 		string buffer;
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			getline(fichierLevelPerso, buffer);
 			istringstream iss(buffer);
@@ -110,10 +110,12 @@ int main()
 
 	//Initialisation
 
+	int arret = false;
+
 	//Parametres de la fenetre
 	int const width = 960;
 	int const height = 640;
-	sf::RenderWindow window(VideoMode(width, height), "Hello World!"/*, Style::Fullscreen*/);
+	sf::RenderWindow window(VideoMode(width, height), "Hello World!");
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 	sf::View view;
@@ -152,57 +154,84 @@ int main()
 
 	while (window.isOpen())
 	{
-		//Temps
-
-		time = clock.getElapsedTime(); //time prend la valeur du temps au moment du début de la boucle
-
-									   //Evenements
-
-		input.update(); //On met à jour les évenements
-
-		if (!persoCharge)
-		{
-			persoCharge = true;
-			loadPerso(&tabHero, &tabEnnemi);
-		}
-
-
-		/////////////////////////////////////////////////////////////////////////////////
-
-		//Dessin
-
 
 		window.clear();
 
-		if (tabHero[0]->getPosition().x < width / 2)
+		if (!arret)
 		{
-			positionBackground = Vector2f(0, 0);
-		}
+			//Temps
+
+			time = clock.getElapsedTime(); //time prend la valeur du temps au moment du début de la boucle
+
+										   //Evenements
+
+			input.update(); //On met à jour les évenements
+
+			if (!persoCharge)
+			{
+				persoCharge = true;
+				loadPerso(&tabHero, &tabEnnemi);
+			}
+
+
+			/////////////////////////////////////////////////////////////////////////////////
+
+			//Dessin
+
+			if (tabHero[0]->getPosition().x < width / 2)
+			{
+				positionBackground = Vector2f(0, 0);
+			}
+
+			else
+			{
+				positionBackground = Vector2f(tabHero[0]->getPosition().x - 480, 0);
+			}
+
+			background.setPosition(positionBackground - Vector2f(10, 0)); // on le decale de 10px vers la gauche pour eviter les beugs
+			window.draw(background);
+
+
+			decor.loadMap(1, window); //On dessine la map
+
+			tabHero[0]->updatePerso(&input, &decor, time); //On met a jour le hero
+			tabHero[0]->dessinerPerso(&window); //Dessin du hero et de ses balles
+
+			for (int i = 0; i < tabEnnemi.size(); i++)
+			{
+				tabEnnemi[i]->updatePerso(&decor, tabHero[0]->getPosition()); //On met a jour les ennemis
+				tabEnnemi[i]->dessinerPerso(&window); //Dessin des ennemmis et de leurs balles
+
+				if (tabHero[0]->testBalle(tabEnnemi[i]))
+				{
+					delete tabEnnemi[i];
+					tabEnnemi.erase(tabEnnemi.begin() + i);
+				}
+
+				if (tabEnnemi.size() > 0 && tabEnnemi[i]->testBalle(tabHero[0]))
+				{
+					arret = true;
+				}
+			}
+
+			view.reset(FloatRect(positionBackground, Vector2f(864, 480)));
+
+			window.setView(view);
+		} 
 
 		else
 		{
-			positionBackground = Vector2f(tabHero[0]->getPosition().x - 480, 0);
+			RectangleShape rect(Vector2f(500, 500));
+			rect.setFillColor(Color::Black); //Mettre un png opacity 0.5
+
+			window.draw(rect); 
+
+			input.update();
 		}
-
-		background.setPosition(positionBackground - Vector2f(10, 0)); // on le decale de 10px vers la gauche pour eviter les beugs
-		window.draw(background);
-
-
-		decor.loadMap(1, window); //On dessine la map
-
-		tabHero[0]->updatePerso(&input, &decor, time); //On met a jour le hero
-		tabHero[0]->dessinerPerso(&window); //Dessin du hero et de ses balles
-
-		for (int i = 0; i < tabEnnemi.size(); i++)
-		{
-			tabEnnemi[i]->updatePerso(&decor, tabHero[0]->getPosition()); //On met a jour les ennemis
-			tabEnnemi[i]->dessinerPerso(&window); //Dessin des ennemmis et de leurs balles
-		}
-
-		view.reset(FloatRect(positionBackground, Vector2f(864, 480)));
-
-		window.setView(view);
+		
 
 		window.display();
 	}
+
+	return 0;
 }

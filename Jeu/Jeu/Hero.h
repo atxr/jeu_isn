@@ -18,5 +18,6 @@ private:
 	bool sol; //Test si le perso est sur le sol
 	bool saut; //Est ce qu'on doit sauter
 	Time debutSaut; //Debut tu temps auquel on a sauté
+	bool direction;
 };
 

@@ -4,15 +4,21 @@
 
 Hero::Hero() : Perso::Perso()
 {
-	sol = saut = false;
-
 	setFillColor(Color::Red);
 	setPosition(120, 400);
+
 }
 
 Hero::Hero(int x, int y) : Perso(x,y)
 {
 	setFillColor(Color::Red);
+
+	m_vie = 3;
+	nbDegat = 2;
+
+	sol = saut = false;
+	
+	direction = true ;
 }
 
 
@@ -31,7 +37,7 @@ void Hero::updatePerso(Input *input, Decor *decor, Time time)
 	bouton.attaque = input->getStatut(ATTAQUE);
 	bouton.pause = input->getStatut(PAUSE);
 
-	bool direction = input->getDirection();
+	direction = input->getDirection();
 
 	Collision * test = new Collision;
 
@@ -225,4 +231,3 @@ void Hero::updatePerso(Input *input, Decor *decor, Time time)
 		}
 	}
 }
-

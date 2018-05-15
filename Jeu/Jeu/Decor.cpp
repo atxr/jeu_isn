@@ -73,7 +73,7 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 		vector<int> line;
 		string buffer;
 
-		MAP_SIZE_X = 50;
+		MAP_SIZE_X = 250;
 		MAP_SIZE_Y = 15;
 
 		map.clear();
