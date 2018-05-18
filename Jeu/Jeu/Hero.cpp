@@ -13,7 +13,7 @@ Hero::Hero(int x, int y) : Perso(x,y)
 {
 	setFillColor(Color::Red);
 
-	m_vie = 3;
+	m_vie = 30;
 	nbDegat = 2;
 
 	sol = saut = false;

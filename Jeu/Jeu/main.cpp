@@ -53,9 +53,11 @@ bref tatarde pas trop ici cest un peu sale :o
 #include "Ennemi.h"
 #include <math.h>
 
-void loadPerso(vector<Hero*> * tabHero, vector<Ennemi*> * tabPerso)
+void loadPerso(int vague, vector<Ennemi*> * tabPerso, vector<Hero*> * tabHero = 0)
 {
-	string fileDirPerso("level1perso");
+	stringstream buffer;
+	buffer << "level" << vague << "perso";
+	string fileDirPerso = buffer.str();
 
 	ifstream fichierLevelPerso(fileDirPerso);
 
@@ -64,9 +66,8 @@ void loadPerso(vector<Hero*> * tabHero, vector<Ennemi*> * tabPerso)
 		int a, b, c;
 		string buffer;
 
-		for (int i = 0; i < 20; i++)
+		while(getline(fichierLevelPerso, buffer)) //Tant qu'on est pas a la fin du fichier
 		{
-			getline(fichierLevelPerso, buffer);
 			istringstream iss(buffer);
 
 			iss >> a >> b >> c;
@@ -78,14 +79,6 @@ void loadPerso(vector<Hero*> * tabHero, vector<Ennemi*> * tabPerso)
 				break;
 
 			case 1:
-				tabPerso->push_back(new Ennemi(b, c));
-				break;
-
-			case 2:
-				tabPerso->push_back(new Ennemi(b, c));
-				break;
-
-			case 3:
 				tabPerso->push_back(new Ennemi(b, c));
 				break;
 
@@ -110,7 +103,11 @@ int main()
 
 	//Initialisation
 
-	int arret = false;
+	bool arret (false);
+	int vague = 1;
+
+	float score (0.f);
+	int nbEnnemi (0);
 
 	//Parametres de la fenetre
 	int const width = 960;
@@ -170,7 +167,7 @@ int main()
 			if (!persoCharge)
 			{
 				persoCharge = true;
-				loadPerso(&tabHero, &tabEnnemi);
+				loadPerso(vague, &tabEnnemi, &tabHero);
 			}
 
 
@@ -192,7 +189,7 @@ int main()
 			window.draw(background);
 
 
-			decor.loadMap(1, window); //On dessine la map
+			decor.loadMap(&window); //On dessine la map
 
 			tabHero[0]->updatePerso(&input, &decor, time); //On met a jour le hero
 			tabHero[0]->dessinerPerso(&window); //Dessin du hero et de ses balles
@@ -206,11 +203,22 @@ int main()
 				{
 					delete tabEnnemi[i];
 					tabEnnemi.erase(tabEnnemi.begin() + i);
+
+					if (tabEnnemi.size() == 0)
+					{
+						vague++;
+						loadPerso(vague, &tabEnnemi);
+					}
+
+					nbEnnemi++;
 				}
 
-				if (tabEnnemi.size() > 0 && tabEnnemi[i]->testBalle(tabHero[0]))
+				if (tabEnnemi[i]->testBalle(tabHero[0]))
 				{
-					arret = true;
+					if (tabHero[0]->estMort())
+					{
+						arret = true;
+					}
 				}
 			}
 
@@ -221,6 +229,9 @@ int main()
 
 		else
 		{
+			score = ceil(1000 * nbEnnemi / time.asSeconds());
+			cout << "Le score est de " << score << endl;
+
 			RectangleShape rect(Vector2f(500, 500));
 			rect.setFillColor(Color::Black); //Mettre un png opacity 0.5
 

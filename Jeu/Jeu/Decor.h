@@ -27,7 +27,7 @@ public:
 	int getMapSizeX();
 	int getMapSizeY();
 	void getMap(vector<vector<int>> * mapPointeur);
-	void loadMap(int const level, sf::RenderWindow &window); //Ca cest la fonction qui charge la map et la met dans un tableau puis la dessine sur lecran 
+	void loadMap(sf::RenderWindow *window); //Ca cest la fonction qui charge la map et la met dans un tableau puis la dessine sur lecran 
 	void testCollisionDroite(Collision * collision); //Et ca cest ce qui permet de tester si le personnage rentre en collision avec la map
 	void testCollisionHaut(Collision * collision);
 	void testCollisionBas(Collision * collision);

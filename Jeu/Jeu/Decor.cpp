@@ -46,25 +46,12 @@ void Decor::getMap(vector<vector<int>>* mapPointeur)
 	mapPointeur = &map;
 }
 
-void Decor::loadMap(int const level, sf::RenderWindow &window)
+void Decor::loadMap(sf::RenderWindow *window)
 {
 	//Chargement de la map
 
-	string fileDirMap;
+	string fileDirMap = "level1map";;
 	string fileDirPerso;
-
-	switch (level)
-	{
-	case 1:
-		fileDirMap = "level1map";
-		break;
-	case 2:
-		fileDirMap = "level2map";
-		break;
-	case 3:
-		fileDirMap = "level3map";
-		break;
-	}
 
 	ifstream fichierLevelMap(fileDirMap);
 
@@ -73,23 +60,20 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 		vector<int> line;
 		string buffer;
 
-		MAP_SIZE_X = 250;
+		MAP_SIZE_X = 300;
 		MAP_SIZE_Y = 15;
 
 		map.clear();
 
 		for (int y = 0; y < MAP_SIZE_Y; y++)
 		{
-			for (int x = 0; x < 1; x++)
+			getline(fichierLevelMap, buffer);
+			istringstream iss(buffer);
+			for (int i = 0; i < MAP_SIZE_X; i++)
 			{
-				getline(fichierLevelMap, buffer);
-				istringstream iss(buffer);
-				for (int i = 0; i < MAP_SIZE_X; i++)
-				{
-					int value;
-					iss >> value;
-					line.push_back(value);
-				}
+				int value;
+				iss >> value;
+				line.push_back(value);
 			}
 			map.push_back(line);
 			line.clear();
@@ -143,7 +127,7 @@ void Decor::loadMap(int const level, sf::RenderWindow &window)
 			}
 
 			tileSprite.setPosition(Vector2f(x*TILE_SIZE, y*TILE_SIZE));
-			window.draw(tileSprite);
+			window->draw(tileSprite);
 		}
 	}
 
@@ -315,7 +299,7 @@ bool Decor::testVisee(Vector2f position, Vector2f positionHero)
 
 		while (!fin)
 		{
-			test = map[numTileY][numTileX + i * dir] <= 1;
+			test = (map[numTileY][numTileX + i * dir] <= 1);
 
 			if (numTileX + (i + 1) * dir == numTileXHero || !test)
 			{
