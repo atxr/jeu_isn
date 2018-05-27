@@ -8,7 +8,6 @@ Ennemi::Ennemi()
 
 Ennemi::Ennemi(int x, int y) : Perso(x,y), occupe(false), pause(true)
 {
-	setFillColor(Color::Blue);
 	m_vie = 3;
 	nbDegat = 1;
 }

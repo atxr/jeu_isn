@@ -13,7 +13,7 @@ c'est la classe du personnage comme son nom l'indique
 #include "Balle.h"
 
 
-class Perso : public sf::RectangleShape
+class Perso : public sf::Sprite
 {
 public:
 	Perso(); //Constructeur -> ce que l'ont fait quand on creer un nouveau perso
@@ -23,6 +23,7 @@ public:
 	void recevoirDegat(int degat);
 	bool testBalle(Perso *cible);
 	bool estMort();
+	int getVie();
 protected:
 	int m_vie;
 	bool mort;

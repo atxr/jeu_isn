@@ -19,5 +19,6 @@ private:
 	bool saut; //Est ce qu'on doit sauter
 	Time debutSaut; //Debut tu temps auquel on a sauté
 	bool direction;
+	Texture textureHero;
 };
 

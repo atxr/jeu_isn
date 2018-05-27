@@ -6,7 +6,7 @@ Perso::Perso()
 {
 }
 
-Perso::Perso(int x, int y) : RectangleShape::RectangleShape(Vector2f(25, 40)) //Attention la taille est dans la fonctioon update et la fonction getEchelle
+Perso::Perso(int x, int y) 
 {
 	feu = false;
 	setPosition(Vector2f(x, y));
@@ -74,5 +74,10 @@ bool Perso::estMort()
 {
 	cout << m_vie;
 	return (m_vie <= 0);
+}
+
+int Perso::getVie()
+{
+	return m_vie;
 }
 

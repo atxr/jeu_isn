@@ -4,16 +4,18 @@
 
 Hero::Hero() : Perso::Perso()
 {
-	setFillColor(Color::Red);
-	setPosition(120, 400);
-
 }
 
 Hero::Hero(int x, int y) : Perso(x,y)
 {
-	setFillColor(Color::Red);
+	
+	if (!textureHero.loadFromFile("graphics/test.png"))
+	{
+	}
+	setTexture(textureHero);
+	setPosition(100, 400);
 
-	m_vie = 30;
+	m_vie = 3;
 	nbDegat = 2;
 
 	sol = saut = false;

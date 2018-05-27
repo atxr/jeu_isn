@@ -10,7 +10,7 @@ Input::Input()
 
 Input::Input(sf::RenderWindow * window) : window(window)
 {
-	bouton.droite = bouton.gauche = bouton.haut = bouton.bas = bouton.attaque = bouton.pause = false;
+	bouton.droite = bouton.gauche = bouton.haut = bouton.bas = bouton.attaque = bouton.pause = rejouer = false;
 }
 
 
@@ -82,6 +82,8 @@ void Input::setBouton(int id, bool value)
 
 void Input::update()
 {
+	rejouer = false;
+
 	while (window->pollEvent(event))
 	{
 		switch (event.type)
@@ -127,6 +129,8 @@ void Input::update()
 				break;
 			}
 
+			rejouer = true;
+
 			break;
 
 			//Touche relachée
@@ -171,4 +175,9 @@ void Input::update()
 bool Input::getDirection()
 {
 	return direction;
+}
+
+bool Input::getRejouer()
+{
+	return rejouer;
 }

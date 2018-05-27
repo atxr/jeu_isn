@@ -12,13 +12,9 @@ Decor::Decor()
 		tileSprite.setTexture(tileTexture);
 	}
 
-	if (!backgroundTexture.loadFromFile("graphics/background.png"))
+	if (!font.loadFromFile("graphics/game_over.ttf"))
 	{
-		cerr << "Erreur, texture introuvable." << endl;
-	}
-	else
-	{
-		background.setTexture(backgroundTexture);
+		cerr << "Erreur, police introuvable." << endl;
 	}
 }
 
@@ -50,7 +46,7 @@ void Decor::loadMap(sf::RenderWindow *window)
 {
 	//Chargement de la map
 
-	string fileDirMap = "level1map";;
+	string fileDirMap = "level1map";
 	string fileDirPerso;
 
 	ifstream fichierLevelMap(fileDirMap);
@@ -140,19 +136,20 @@ void Decor::testCollisionDroite(Collision * collision)
 
 	int numTileXSuivant = floor((x + collision->longueur) / TILE_SIZE) + 1;
 	int numTileYHaut = floor(y / TILE_SIZE);
+	int numTileYMilieu = floor((y + collision->hauteur / 2) / TILE_SIZE);
 	int numTileYBas = floor((y + collision->hauteur) / TILE_SIZE);
 
-	if (numTileXSuivant * TILE_SIZE > x + collision->longueur + collision->vitesse)
+	if (numTileXSuivant * TILE_SIZE > x + collision->longueur + collision->vitesse) //On ne change pas de case du tableau 
 	{
 		collision->statut = true;
 	}
 
-	else if (numTileXSuivant == MAP_SIZE_X)
+	else if (numTileXSuivant == MAP_SIZE_X) //On atteint le bout de la map
 	{
 		collision->valeur = MAP_SIZE_X * TILE_SIZE - 25;
 	}
 
-	else if (map[numTileYBas][numTileXSuivant] <= 1 && (map[numTileYHaut][numTileXSuivant]) <= 1)
+	else if (map[numTileYBas][numTileXSuivant] <= 1 && map[numTileYMilieu][numTileXSuivant] <= 1 && (map[numTileYHaut][numTileXSuivant]) <= 1) //Si les 3 points de test sont suivi d'une case libre
 	{
 		collision->statut = true;
 	}
@@ -229,6 +226,7 @@ void Decor::testCollisionGauche(Collision * collision)
 
 	int numTileXGauche = floor(x / TILE_SIZE);
 	int numTileYHaut = floor(y / TILE_SIZE);
+	int numTileYMilieu = floor((y + collision->hauteur / 2) / TILE_SIZE);
 	int numTileYBas = floor((y + collision->hauteur) / TILE_SIZE);
 
 	if (numTileXGauche == 0)
@@ -244,7 +242,7 @@ void Decor::testCollisionGauche(Collision * collision)
 		}
 	}
 
-	else if (map[numTileYBas][floor((x - collision->vitesse) / TILE_SIZE)] <= 1 && map[numTileYHaut][floor((x - collision->vitesse) / TILE_SIZE)] <= 1)
+	else if (map[numTileYBas][floor((x - collision->vitesse) / TILE_SIZE)] <= 1 && map[numTileYMilieu][floor((x - collision->vitesse) / TILE_SIZE)] <= 1 && map[numTileYHaut][floor((x - collision->vitesse) / TILE_SIZE)] <= 1)
 	{
 		collision->statut = true;
 	}
@@ -314,4 +312,30 @@ bool Decor::testVisee(Vector2f position, Vector2f positionHero)
 	}
 
 	return (positionHero.y >= position.y - 80 /*Hauteur*/ && positionHero.y <= position.y + 80 && fabs(position.x - positionHero.x) < 500 && test);
+}
+
+void Decor::drawLife(sf::RenderWindow *window, int vie, sf::Vector2f position)
+{
+	Sprite spriteVie;
+	spriteVie.setTexture(tileTexture);
+	spriteVie.setTextureRect(IntRect(VIE_X, VIE_Y, TILE_SIZE, TILE_SIZE));
+	/*spriteVie.setPosition(position);
+
+	stringstream ss;
+	ss << "x" << vie;
+	Text text;
+	text.setFont(font);
+	text.setString(ss.str());
+	text.setPosition(position + Vector2f(40, -80));
+	text.setFillColor(Color::Red);
+	text.setCharacterSize(100);
+
+	window->draw(spriteVie);
+	//window->draw(text);*/
+
+	for (int i = vie; i > 0; i--)
+	{
+		spriteVie.setPosition(position + Vector2f(3 * TILE_SIZE, 0) - Vector2f(i * TILE_SIZE, 0));
+		window->draw(spriteVie);
+	}
 }

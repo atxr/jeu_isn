@@ -110,17 +110,19 @@ int main()
 	int nbEnnemi (0);
 
 	//Parametres de la fenetre
-	int const width = 960;
+	int const width = 1100;
 	int const height = 640;
 	sf::RenderWindow window(VideoMode(width, height), "Hello World!");
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
 	sf::View view;
 	Vector2f positionBackground;
+	Vector2f positionVie;
 
 	//Horloge
 	sf::Clock clock;
 	Time time;
+	Clock compteurFin;
 
 	//Perso
 	vector<Ennemi*> tabEnnemi;
@@ -132,6 +134,8 @@ int main()
 
 	//Input
 	Input input(&window);
+
+	float posCentre;
 
 	Texture backgroundTexture;
 	Sprite background;
@@ -145,31 +149,67 @@ int main()
 		background.setTexture(backgroundTexture);
 	}
 
+	Font font1;
+	if (!font1.loadFromFile("graphics/font1.ttf"))
+	{
+		cerr << "Erreur, police introuvable." << endl;
+	}
+
+	Font font2;
+	if (!font2.loadFromFile("graphics/game_over.ttf"))
+	{
+		cerr << "Erreur, police introuvable." << endl;
+	}
+
+	Text textVague;
+	textVague.setFont(font1);
+	textVague.setFillColor(Color::Red);
+
+	Text textRecord;
+	textRecord.setFont(font2);
+	textRecord.setPosition(290, 30);
+	textRecord.setCharacterSize(80);
+	textRecord.setFillColor(Color::Yellow);
+	textRecord.setString("NOUVEAU RECORD !");
+
+	Text textGameOver; 
+	textGameOver.setFont(font2);
+	textGameOver.setPosition(230, 60);
+	textGameOver.setCharacterSize(200);
+	textGameOver.setString("Game Over");
+	textGameOver.setFillColor(Color::White);
+
+	Text textScore;
+	textScore.setFont(font2);
+	textScore.setPosition(310, 300);
+	textScore.setCharacterSize(60);
+	textScore.setFillColor(Color::White);
+
+	
+
+	
+
 	///////////////////////////////////////////////////////////////////////////
 
 	//Boucle de jeu
 
 	while (window.isOpen())
 	{
-
 		window.clear();
+
+		input.update();
 
 		if (!arret)
 		{
-			//Temps
-
-			time = clock.getElapsedTime(); //time prend la valeur du temps au moment du début de la boucle
-
-										   //Evenements
-
-			input.update(); //On met à jour les évenements
-
 			if (!persoCharge)
 			{
 				persoCharge = true;
 				loadPerso(vague, &tabEnnemi, &tabHero);
 			}
 
+			//Temps
+
+			time = clock.getElapsedTime(); //time prend la valeur du temps au moment du début de la boucle
 
 			/////////////////////////////////////////////////////////////////////////////////
 
@@ -177,13 +217,17 @@ int main()
 
 			if (tabHero[0]->getPosition().x < width / 2)
 			{
-				positionBackground = Vector2f(0, 0);
+				posCentre = 480;
 			}
 
 			else
 			{
-				positionBackground = Vector2f(tabHero[0]->getPosition().x - 480, 0);
+				posCentre = tabHero[0]->getPosition().x;
 			}
+
+			positionBackground = Vector2f(posCentre - 480, 0);
+			positionVie = Vector2f(posCentre + 280, 0);
+			
 
 			background.setPosition(positionBackground - Vector2f(10, 0)); // on le decale de 10px vers la gauche pour eviter les beugs
 			window.draw(background);
@@ -218,30 +262,51 @@ int main()
 					if (tabHero[0]->estMort())
 					{
 						arret = true;
+						compteurFin.restart();
 					}
 				}
 			}
+
+			decor.drawLife(&window, tabHero[0]->getVie(), positionVie);
 
 			view.reset(FloatRect(positionBackground, Vector2f(864, 480)));
 
 			window.setView(view);
 		} 
-
+		
 		else
 		{
-			score = ceil(1000 * nbEnnemi / time.asSeconds());
-			cout << "Le score est de " << score << endl;
+			view.reset(FloatRect(Vector2f(), Vector2f(864, 480)));
+			window.setView(view);
 
-			RectangleShape rect(Vector2f(500, 500));
-			rect.setFillColor(Color::Black); //Mettre un png opacity 0.5
+			score = ceil(100 * nbEnnemi + 100 * nbEnnemi  / time.asSeconds());
+			stringstream strScore;
+			strScore << "Votre score est de : " << score;
 
-			window.draw(rect); 
+			textScore.setString(strScore.str());
 
-			input.update();
+			if (!1)
+			{
+				window.draw(textRecord);
+			}
+
+			window.draw(textGameOver);
+			window.draw(textScore);
+
+			if (input.getRejouer() && compteurFin.getElapsedTime().asSeconds() > 1)
+			{
+				arret = false;
+				tabEnnemi.clear();
+				tabHero.clear();
+				persoCharge = false;
+				nbEnnemi = 0;
+				clock.restart();
+			}
 		}
 		
 
 		window.display();
+
 	}
 
 	return 0;

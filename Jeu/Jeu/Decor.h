@@ -34,6 +34,7 @@ public:
 	void testCollisionGauche(Collision * collision);
 	bool getEchelle(Vector2f const position);
 	bool testVisee(Vector2f position, Vector2f positionHero);
+	void drawLife(sf::RenderWindow *window, int vie, sf::Vector2f position);
 
 private:
 
@@ -44,6 +45,8 @@ private:
 
 	sf::Texture backgroundTexture; //Pareil pour le background quon devrait changer ptet celui la est provisoire
 	sf::Sprite background; //Encore le fameux sprite qui va avec :o
+
+	sf::Font font;
 
 	int MAP_SIZE_X; //Ici le nombre de bloc qu'on met en longeur
 	int MAP_SIZE_Y; //Et la en largeur. Cest 2 valeurs vont changer quand on aura la map pour linstant jai mis au hasard hein ce qui explique que la map est coupé
@@ -61,6 +64,7 @@ private:
 	int TERRE_ET_ROCHE_Y = 11 * TILE_SIZE;
 	int ECHELLE_X = 5 * TILE_SIZE;
 	int ECHELLE_Y = 5 * TILE_SIZE;
-
+	int VIE_X = 8 * TILE_SIZE;
+	int VIE_Y = 7 * TILE_SIZE;
 };
 
