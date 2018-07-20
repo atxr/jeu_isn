@@ -1,9 +1,9 @@
 /*
-La classe ennemi ... vide ...
+La classe ennemi
 */
 
 #pragma once
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include "Perso.h"
 #include <ctime>
 #include <cstdlib>

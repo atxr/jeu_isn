@@ -4,12 +4,10 @@ Alors ici la classe Decor
 mmm la ya du monde
 
 ca gere la map en gros et le backgound
-
-le decor quoi..
 */
 
 #pragma once
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -17,6 +15,7 @@ le decor quoi..
 #include <vector>
 #include "typedef.h"
 #include "Balle.h"
+#include <cmath>
 
 class Decor
 {
@@ -49,7 +48,7 @@ private:
 	sf::Font font;
 
 	int MAP_SIZE_X; //Ici le nombre de bloc qu'on met en longeur
-	int MAP_SIZE_Y; //Et la en largeur. Cest 2 valeurs vont changer quand on aura la map pour linstant jai mis au hasard hein ce qui explique que la map est coupé
+	int MAP_SIZE_Y; //Et la en largeur. 
 
 	//CONSTANTES
 

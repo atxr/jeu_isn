@@ -1,14 +1,11 @@
 /*
 typedef.h le fameux
 
-mais questcekec que caaa
-mdrrr
-
-alors en gros cest un fichier ou je declare des petites structures et enum
+cest un fichier ou je declare des petites structures et enum
 */
 
 #pragma once
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 using namespace sf;

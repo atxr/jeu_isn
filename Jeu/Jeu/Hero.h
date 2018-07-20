@@ -3,7 +3,7 @@
 #include "Perso.h"
 #include "Input.h"
 #include "Decor.h"
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include "typedef.h"
 
 class Hero : public Perso

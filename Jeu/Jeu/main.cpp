@@ -1,14 +1,10 @@
 /*
 main.cpp
 
-alors ici cest pas nettoyer mais en principe il va pas se passer grand chose pcq tout ou presque va se faire dans les classes
-
 je me contente de creer et d'initilaliser certains truc et de faire la boucle de jeu et le dessin et pouff le tour et jouer
-
-bref tatarde pas trop ici cest un peu sale :o
 */
 
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Perso.h"
 #include "Hero.h"

@@ -5,7 +5,7 @@ c'est la classe du personnage comme son nom l'indique
 */
 
 #pragma once
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <math.h>
 #include "typedef.h"
 #include "Decor.h"
