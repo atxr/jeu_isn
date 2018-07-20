@@ -88,7 +88,6 @@ void Input::update()
 	{
 		switch (event.type)
 		{
-
 			//Fenetre ferrmée
 		case Event::Closed:
 			window->close();

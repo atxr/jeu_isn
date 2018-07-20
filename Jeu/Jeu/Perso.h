@@ -31,6 +31,8 @@ protected:
 	vector<Balle*> tabBalle; //Balles tirées par le perso
 	bool feu;
 	Time debutFeu;
+	vector<Texture*> texturePerso;
+	Clock sprite;
 
 	//Constante
 

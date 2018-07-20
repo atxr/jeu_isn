@@ -1,39 +1,3 @@
-/* TADAAA VOICI NOTRE PETIT JEU
-ALOOOORS PETIT RECPITUlaTIF DE CE QUI EST FAIT ET PAS FAIT:
-
-ACTUELEMENT JE SUIS EN TRAIN DE FAIRE LES MOUVEMENTS DU PERSO C'EST PAS FINI YA PLEIN DE BEUG HEIN POUR LA GRAVITé ET LE SAUT NOTAMMENT
-EN PRINCIPE DROITE - GAUCHE ET LES COLISIONS CEST BON TU ME DIS SI TU TROUVE DES BEUG DANS LE JEU
-
-ENSUITE COMME TU PEUX LE VOIR YA UN DEBUT DE MAP
-LE FICHIER QUI DESSINE LA MAP S'APPELLE level1.txt JE CROIS CHAQUE NUMERO CORRESPOND A UNE TILE PRECISE (TOUT EST PRECISé DANS DECOR.CPP)
-BREF DONC IL NOUS FAUDRAIT UNE MAP CE SERAIT COOL DEJA
-
-ENSUITE LE TIR EST BEUG2 DE FOU
-JAVAIS FAIT UN PROTOYPE QUE JE VAIS REPRENDRE EN ENTIER DONC LAISSE LE MOI CE PETIT FDP DE TIR LA MDRRRR
-
-COMME TU LE VOIS CA NOUS LAISSE LA CLASSE ENNEMI QUI EST PRESQUE VIERGE JE CROIS
-CE SERAIT COOL QUE TU COMMENCE A Y REFLECHIR PAS FORCEMENT A LA PROGRAMMER SI TES PAS A LAISE EN C++ MAIS AU MOINS A REFLECHIR COMMENT ON VA SE DEBROUILLER POUR
-FAIRE NOTRE "MINI INTELLIGENCE ARTIFIELLE" PAS TROP INTELLIGENTE POUR LES MECHANTS
-
-ENFIIN IL ME RESTE UN PETIT TRUC A REGLER: LE PERSOOOOOO
-ET OUI COMME TU PEUX LE CONSTATER ON A UN BEAU RECTANGLE ROUGE POUR LINSTANT ET C'EST PAS OUF JE DOIS ADMETTRE DONC IL NOUS FAUDRAIT UNE SPRITESHEET D'UN PERSO SI
-POSSIBLE
-D'AILLEURS TEN PENSE QUOI DE LA TEXTURE, MOI J'AIME BIEN PERSO :D
-
-JE TE FAIT UNE PETITE PERSENTATION DE CHAQUE CLASSE AU DEBUT DE CHAQUE FICHIER POUR QUE TU TY RETROUVE UN PEU
-
-DERNIER TRUC FAUDRAIT QUON SE METTE DACCORD SUR GITHUB POUR SAVOIR SI ON TRAVAILLE SUR 1 SEUL FICHIER OU SUR 2 ET QUON MET EN COMMUN QD ON A DES AMELIORATIONS...
-BREF TA COMPRIS
-
-VOILAAAA DIS MOI SI TA LE MOINDRE PB
-
-ET POUR FINIR JE SUIS EN TRAIN DE NETOYER LE CODE DONC YA PAS MAL DE TRUC BIZZARD HEIN MAIS JE TE DIRAIS QD JAURAIS TOUT BIEN NETOOYER
-
-IL NOUS FAUDRAIT UN NOM AUSSI
-*/
-
-/*ATTTENTION BEUG DE COLLISION IL FAUT RAJOUTER UN POINT DE TEST AU MILIEU DU PERSO*/
-
 /*
 main.cpp
 
@@ -52,6 +16,7 @@ bref tatarde pas trop ici cest un peu sale :o
 #include "Decor.h"
 #include "Ennemi.h"
 #include <math.h>
+#include <istream>
 
 void loadPerso(int vague, vector<Ennemi*> * tabPerso, vector<Hero*> * tabHero = 0)
 {
@@ -106,8 +71,10 @@ int main()
 	bool arret (false);
 	int vague = 1;
 
-	float score (0.f);
+	int score = 0;
+	bool record (false);
 	int nbEnnemi (0);
+	bool lecture = false;
 
 	//Parametres de la fenetre
 	int const width = 1100;
@@ -118,6 +85,12 @@ int main()
 	sf::View view;
 	Vector2f positionBackground;
 	Vector2f positionVie;
+
+	//Menu
+
+	bool menu (false);
+	string pseudo;
+	string mdp;
 
 	//Horloge
 	sf::Clock clock;
@@ -185,13 +158,19 @@ int main()
 	textScore.setCharacterSize(60);
 	textScore.setFillColor(Color::White);
 
+	Texture fondAccueilTxt;
+	Sprite fondAccueil;
 	
+	if (!fondAccueilTxt.loadFromFile("graphics/fond.png"))
+	{
+		cout << "Erreur";
+	}
 
-	
-
-	///////////////////////////////////////////////////////////////////////////
-
-	//Boucle de jeu
+	else
+	{
+		fondAccueil.setTexture(fondAccueilTxt);
+		fondAccueil.setScale(0.85, 0.85);
+	}
 
 	while (window.isOpen())
 	{
@@ -199,111 +178,163 @@ int main()
 
 		input.update();
 
-		if (!arret)
+		if (!menu)
 		{
-			if (!persoCharge)
+			Text textAccueil;
+			textAccueil.setString("Catchlife Survival");
+			textAccueil.setFont(font2);
+			textAccueil.setCharacterSize(180);
+			textAccueil.setPosition(230, 150);
+			textAccueil.setFillColor(Color::Red);
+
+			window.draw(fondAccueil);
+			window.draw(textAccueil);
+
+			if (input.getRejouer())
 			{
-				persoCharge = true;
-				loadPerso(vague, &tabEnnemi, &tabHero);
+				menu = true;
 			}
+		}
 
-			//Temps
-
-			time = clock.getElapsedTime(); //time prend la valeur du temps au moment du début de la boucle
-
-			/////////////////////////////////////////////////////////////////////////////////
-
-			//Dessin
-
-			if (tabHero[0]->getPosition().x < width / 2)
+		else
+		{
+			if (!arret) //Boucle du jeu
 			{
-				posCentre = 480;
+				if (!persoCharge) //Chargement des personnages sur la map
+				{
+					persoCharge = true;
+					loadPerso(vague, &tabEnnemi, &tabHero);
+				}
+
+				time = clock.getElapsedTime(); //time prend la valeur du temps au moment du début de la boucle
+
+				//Dessin
+
+				if (tabHero[0]->getPosition().x <= 480)
+				{
+					posCentre = 480;
+				}
+
+				else
+				{
+					posCentre = tabHero[0]->getPosition().x;
+				}
+
+				positionBackground = Vector2f(posCentre - 480, 0); //Scrolling du background
+				positionVie = Vector2f(posCentre + 280, 0); //Position des vies
+
+				background.setPosition(positionBackground - Vector2f(10, 0)); // on le decale de 10px vers la gauche pour eviter les beugs
+				window.draw(background); //Dessin du background
+
+				decor.loadMap(&window); //On dessine la map
+
+				tabHero[0]->updatePerso(&input, &decor, time); //On met a jour le hero
+				tabHero[0]->dessinerPerso(&window); //Dessin du hero et de ses balles
+
+				for (int i = 0; i < tabEnnemi.size(); i++)
+				{
+					tabEnnemi[i]->updatePerso(&decor, tabHero[0]->getPosition()); //On met a jour les ennemis
+					tabEnnemi[i]->dessinerPerso(&window); //Dessin des ennemmis et de leurs balles
+
+					if (tabHero[0]->testBalle(tabEnnemi[i])) //On detruit les ennemis si jamais ils sont tués
+					{
+						delete tabEnnemi[i];
+						tabEnnemi.erase(tabEnnemi.begin() + i);
+
+						if (tabEnnemi.size() == 0) //Si tous les ennemis sont morts, on change de vague	
+						{
+							vague++;
+							loadPerso(vague, &tabEnnemi);
+						}
+
+						nbEnnemi++;
+					}
+
+					if (tabEnnemi[i]->testBalle(tabHero[0])) //Si jamais le héro est touché par une balle...
+					{
+						if (tabHero[0]->estMort()) //On regarde si il est encore en vie
+						{
+							arret = true; //Si il est mort on quitte la boucle du jeu
+							compteurFin.restart();
+						}
+					}
+				}
+
+				decor.drawLife(&window, tabHero[0]->getVie(), positionVie); //Dessin des vies
+
+				view.reset(FloatRect(positionBackground, Vector2f(864, 480))); //On établie la vue
+
+				window.setView(view);
 			}
 
 			else
 			{
-				posCentre = tabHero[0]->getPosition().x;
-			}
+				score = ceil(100 * nbEnnemi + 100 * nbEnnemi / time.asSeconds()); //On calcul le score
 
-			positionBackground = Vector2f(posCentre - 480, 0);
-			positionVie = Vector2f(posCentre + 280, 0);
-			
-
-			background.setPosition(positionBackground - Vector2f(10, 0)); // on le decale de 10px vers la gauche pour eviter les beugs
-			window.draw(background);
-
-
-			decor.loadMap(&window); //On dessine la map
-
-			tabHero[0]->updatePerso(&input, &decor, time); //On met a jour le hero
-			tabHero[0]->dessinerPerso(&window); //Dessin du hero et de ses balles
-
-			for (int i = 0; i < tabEnnemi.size(); i++)
-			{
-				tabEnnemi[i]->updatePerso(&decor, tabHero[0]->getPosition()); //On met a jour les ennemis
-				tabEnnemi[i]->dessinerPerso(&window); //Dessin des ennemmis et de leurs balles
-
-				if (tabHero[0]->testBalle(tabEnnemi[i]))
+				//On lit le fichier score et on regarde si le score est un reccord. Si jamais c'est un reccord on remplace la valeur dans le fichier.
+				if (!lecture)
 				{
-					delete tabEnnemi[i];
-					tabEnnemi.erase(tabEnnemi.begin() + i);
-
-					if (tabEnnemi.size() == 0)
+					ifstream fichierScore("score.txt", ios::in);
+					if (fichierScore)
 					{
-						vague++;
-						loadPerso(vague, &tabEnnemi);
+						string buffer;
+						getline(fichierScore, buffer);
+						int meilleurScore = stoi(buffer);
+						fichierScore.close();
+
+						if (meilleurScore < score)
+						{
+							ofstream fichierScore1("score.txt", ios::out | ios::trunc);
+
+							if (fichierScore1)
+							{
+								fichierScore1 << score;
+								fichierScore1.close();
+							}
+
+							else
+							{
+								cerr << "Erreur lors de l'ouverture du fichier score";
+							}
+
+							record = true;
+						}
 					}
 
-					nbEnnemi++;
-				}
-
-				if (tabEnnemi[i]->testBalle(tabHero[0]))
-				{
-					if (tabHero[0]->estMort())
+					else
 					{
-						arret = true;
-						compteurFin.restart();
+						cerr << "Erreur lors de l'ouverture du fichier score";
 					}
+
+					lecture = true;
 				}
-			}
 
-			decor.drawLife(&window, tabHero[0]->getVie(), positionVie);
+				view.reset(FloatRect(Vector2f(), Vector2f(864, 480)));
+				window.setView(view);
 
-			view.reset(FloatRect(positionBackground, Vector2f(864, 480)));
+				stringstream strScore;
+				strScore << "Votre score est de : " << score;
+				textScore.setString(strScore.str());
 
-			window.setView(view);
-		} 
-		
-		else
-		{
-			view.reset(FloatRect(Vector2f(), Vector2f(864, 480)));
-			window.setView(view);
+				if (record) //Si c'est un reccord on affiche "Nouveau reccord !"
+				{
+					window.draw(textRecord);
+				}
 
-			score = ceil(100 * nbEnnemi + 100 * nbEnnemi  / time.asSeconds());
-			stringstream strScore;
-			strScore << "Votre score est de : " << score;
+				window.draw(textGameOver); //On dessine les textes
+				window.draw(textScore);
 
-			textScore.setString(strScore.str());
-
-			if (!1)
-			{
-				window.draw(textRecord);
-			}
-
-			window.draw(textGameOver);
-			window.draw(textScore);
-
-			if (input.getRejouer() && compteurFin.getElapsedTime().asSeconds() > 1)
-			{
-				arret = false;
-				tabEnnemi.clear();
-				tabHero.clear();
-				persoCharge = false;
-				nbEnnemi = 0;
-				clock.restart();
+				if (input.getRejouer() && compteurFin.getElapsedTime().asSeconds() > 1) //Si jamais une touche est pressée alors on reinitailise le jeu et on relance la boucle de jeu
+				{
+					arret = false;
+					tabEnnemi.clear();
+					tabHero.clear();
+					persoCharge = false;
+					nbEnnemi = 0;
+					clock.restart();
+				}
 			}
 		}
-		
 
 		window.display();
 

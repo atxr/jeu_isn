@@ -8,12 +8,39 @@ Ennemi::Ennemi()
 
 Ennemi::Ennemi(int x, int y) : Perso(x,y), occupe(false), pause(true)
 {
+	for (int i = 0; i < 6; i++)
+	{
+		stringstream ss;
+		ss << "graphics/ennemi/" << i << ".png";
+		texturePerso.push_back(new Texture);
+		if (!texturePerso[i]->loadFromFile(ss.str()))
+		{
+			cout << ss.str();
+		}
+	}
+
+	setTexture(*texturePerso[0]);
+	scale(0.026f, 0.026f);
+
+
 	m_vie = 3;
 	nbDegat = 1;
 }
 
 void Ennemi::updatePerso(Decor *decor, Vector2f positionHero)
 {
+	//SPRITE
+
+	if (positionHero.x < getPosition().x)
+	{
+		setTexture(*texturePerso[3]);
+	}
+
+	else
+	{
+		setTexture(*texturePerso[0]);
+	}
+
 	//TEST DE GRAVITE
 
 	Collision * test = new Collision;
@@ -60,7 +87,6 @@ void Ennemi::updatePerso(Decor *decor, Vector2f positionHero)
 
 	else 
 	{
-
 		pauseFeu = false;
 		feu = false;
 	}
@@ -111,6 +137,8 @@ void Ennemi::updatePerso(Decor *decor, Vector2f positionHero)
 			switch (action)
 			{
 			case AVANCER_DROITE:
+				setTexture(*texturePerso[static_cast<int>(sprite.getElapsedTime().asSeconds() * 6) % 3]);
+
 				decor->testCollisionDroite(test);
 
 				if (test->statut)
@@ -127,6 +155,8 @@ void Ennemi::updatePerso(Decor *decor, Vector2f positionHero)
 				break;
 
 			case AVANCER_GAUCHE:
+				setTexture(*texturePerso[(static_cast<int>(sprite.getElapsedTime().asSeconds() * 6) % 3) + 3]);
+
 				decor->testCollisionGauche(test);
 
 				if (test->statut)

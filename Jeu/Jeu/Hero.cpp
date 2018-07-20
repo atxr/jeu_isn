@@ -8,12 +8,18 @@ Hero::Hero() : Perso::Perso()
 
 Hero::Hero(int x, int y) : Perso(x,y)
 {
-	
-	if (!textureHero.loadFromFile("graphics/test.png"))
+	for (int i = 0; i < 7; i++)
 	{
+		stringstream ss;
+		ss << "graphics/hero/" << i << ".png";
+		texturePerso.push_back(new Texture);
+		if (!texturePerso[i]->loadFromFile(ss.str()))
+		{
+			cout << ss.str();
+		}
 	}
-	setTexture(textureHero);
-	setPosition(100, 400);
+
+	scale(0.026f, 0.026f);
 
 	m_vie = 3;
 	nbDegat = 2;
@@ -32,6 +38,8 @@ Hero::~Hero()
 
 void Hero::updatePerso(Input *input, Decor *decor, Time time)
 {
+	setTexture(*texturePerso[0]);
+
 	bouton.droite = input->getStatut(DROITE);
 	bouton.gauche = input->getStatut(GAUCHE);
 	bouton.haut = input->getStatut(HAUT);
@@ -43,13 +51,15 @@ void Hero::updatePerso(Input *input, Decor *decor, Time time)
 
 	Collision * test = new Collision;
 
-	test->longueur = 25;
+	test->longueur = 27;
 	test->hauteur = 40;
 	test->position = getPosition();
-	test->vitesse = 2;
+	test->vitesse = 3;
 
 	if (bouton.droite) //DROITE
 	{
+		setTexture(*texturePerso[(static_cast<int>(sprite.getElapsedTime().asSeconds() * 6) % 3) + 1]);
+
 		decor->testCollisionDroite(test);
 
 		if (test->statut)
@@ -68,6 +78,8 @@ void Hero::updatePerso(Input *input, Decor *decor, Time time)
 
 	if (bouton.gauche) //GAUCHE
 	{
+		setTexture(*texturePerso[(static_cast<int>(sprite.getElapsedTime().asSeconds() * 6) % 3) + 4]);
+
 		decor->testCollisionGauche(test);
 
 		if (test->statut)
@@ -95,7 +107,8 @@ void Hero::updatePerso(Input *input, Decor *decor, Time time)
 	else
 	{
 		test->vitesse = GRAVITE;
-
+		test->position = getPosition() + Vector2f(4, 0);
+		test->longueur = 23; //Longeur du perso au niveau des pieds
 		decor->testCollisionBas(test);
 
 		if (test->statut)
@@ -111,6 +124,7 @@ void Hero::updatePerso(Input *input, Decor *decor, Time time)
 		}
 
 		test->position = getPosition();
+		test->longueur = 25;
 		test->statut = false;
 		test->valeur = 0;
 	}
@@ -180,7 +194,7 @@ void Hero::updatePerso(Input *input, Decor *decor, Time time)
 	{
 		if (decor->getEchelle(getPosition()))
 		{
-			test->vitesse = 2;
+			test->vitesse = 4;
 			decor->testCollisionBas(test);
 
 			if (test->statut)
